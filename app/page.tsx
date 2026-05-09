@@ -51,8 +51,8 @@ const APPS: AppDef[] = [
   {
     id: "food-twin",
     name: "Food Twin",
-    url: "food.falcon-apps.duckdns.org",
-    href: "https://food.falcon-apps.duckdns.org",
+    url: "food-twin.duckdns.org",
+    href: "https://food-twin.duckdns.org",
     description:
       "Find foods with identical nutritional profiles to swap ingredients without changing your macro targets.",
     tags: ["Next.js", "TypeScript", "SQLite", "Prisma", "tRPC", "Bun"],
