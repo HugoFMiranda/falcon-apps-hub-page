@@ -29,6 +29,47 @@ interface AppDef {
 
 const APPS: AppDef[] = [
   {
+    id: "agendex",
+    name: "Agendex",
+    url: "agendex.falcon-apps.duckdns.org",
+    href: "https://agendex.falcon-apps.duckdns.org",
+    description:
+      "Appointment scheduling and clinic management SaaS. Multi-tenant, multi-location, with public booking pages and a live appointment queue.",
+    tags: ["Laravel", "PHP 8.4", "React", "Inertia.js", "TypeScript", "SQLite", "Tailwind"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)",
+      bgDark: "linear-gradient(135deg, #042f2e 0%, #134e4a 100%)",
+      accent: "#0d9488",
+    },
+  },
+  {
+    id: "broke-but-optimistic",
+    name: "Broke But Optimistic",
+    url: "unbroke-finances.vercel.app",
+    href: "https://unbroke-finances.vercel.app/",
+    description:
+      "Personal finance workspace for tracking activity, planning commitments, managing debt payoff, and monitoring cash flow — all in one authenticated app.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "NextAuth"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+      bgDark: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
+      accent: "#2563eb",
+    },
+    environments: [
+      {
+        label: "Live",
+        href: "https://unbroke-finances.vercel.app/",
+        url: "unbroke-finances.vercel.app",
+      },
+      {
+        label: "Demo",
+        href: "https://demo-bbo.falcon-apps.duckdns.org",
+        url: "demo-bbo.falcon-apps.duckdns.org",
+        demo: { email: "demo@bbo.test", password: "DemoPass123!" },
+      },
+    ],
+  },
+  {
     id: "falcon-tools",
     name: "Falcon Tools",
     url: "tools.falcon-apps.duckdns.org",
@@ -69,33 +110,6 @@ const APPS: AppDef[] = [
       bgDark: "linear-gradient(135deg, #052e16 0%, #14532d 100%)",
       accent: "#16a34a",
     },
-  },
-  {
-    id: "broke-but-optimistic",
-    name: "Broke But Optimistic",
-    url: "unbroke-finances.vercel.app",
-    href: "https://unbroke-finances.vercel.app/",
-    description:
-      "Personal finance workspace for tracking activity, planning commitments, managing debt payoff, and monitoring cash flow — all in one authenticated app.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "NextAuth"],
-    colors: {
-      bgLight: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-      bgDark: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
-      accent: "#2563eb",
-    },
-    environments: [
-      {
-        label: "Live",
-        href: "https://unbroke-finances.vercel.app/",
-        url: "unbroke-finances.vercel.app",
-      },
-      {
-        label: "Demo",
-        href: "https://demo-bbo.falcon-apps.duckdns.org",
-        url: "demo-bbo.falcon-apps.duckdns.org",
-        demo: { email: "demo@bbo.test", password: "DemoPass123!" },
-      },
-    ],
   },
 ];
 
@@ -151,6 +165,39 @@ function AppMockup({ id, accent }: { id: string; accent: string }) {
         <text x="18" y="88" fill={accent} fontSize="8" fillOpacity="0.9">Fat</text>
         <rect x="58" y="80" width="90" height="7" rx="3.5" fill="white" fillOpacity="0.2" />
         <rect x="58" y="80" width="52" height="7" rx="3.5" fill={accent} fillOpacity="0.75" />
+      </svg>
+    );
+  }
+
+  if (id === "agendex") {
+    return (
+      <svg viewBox="0 0 200 120" className="w-full h-full" aria-hidden>
+        {/* Calendar header */}
+        <rect x="18" y="10" width="164" height="14" rx="3" fill="white" fillOpacity="0.15" />
+        <text x="26" y="20" fill="white" fontSize="7" fontWeight="600" fillOpacity="0.9">Mon</text>
+        <text x="54" y="20" fill="white" fontSize="7" fontWeight="600" fillOpacity="0.9">Tue</text>
+        <text x="82" y="20" fill="white" fontSize="7" fontWeight="600" fillOpacity="0.9">Wed</text>
+        <text x="110" y="20" fill={accent} fontSize="7" fontWeight="700">Thu</text>
+        <text x="138" y="20" fill="white" fontSize="7" fontWeight="600" fillOpacity="0.9">Fri</text>
+        {/* Time slots */}
+        <rect x="18" y="28" width="28" height="18" rx="2" fill={accent} fillOpacity="0.85" />
+        <text x="32" y="39" textAnchor="middle" fill="white" fontSize="6" fontWeight="600">09:00</text>
+        <rect x="18" y="50" width="28" height="12" rx="2" fill={accent} fillOpacity="0.4" />
+        <rect x="18" y="66" width="28" height="22" rx="2" fill={accent} fillOpacity="0.6" />
+        <rect x="50" y="28" width="28" height="12" rx="2" fill={accent} fillOpacity="0.5" />
+        <rect x="50" y="44" width="28" height="22" rx="2" fill={accent} fillOpacity="0.85" />
+        <text x="64" y="57" textAnchor="middle" fill="white" fontSize="6" fontWeight="600">10:30</text>
+        <rect x="78" y="34" width="28" height="18" rx="2" fill={accent} fillOpacity="0.4" />
+        <rect x="78" y="56" width="28" height="12" rx="2" fill={accent} fillOpacity="0.6" />
+        <rect x="106" y="28" width="28" height="28" rx="2" fill={accent} />
+        <text x="120" y="43" textAnchor="middle" fill="white" fontSize="6" fontWeight="700">Active</text>
+        <rect x="106" y="60" width="28" height="16" rx="2" fill={accent} fillOpacity="0.5" />
+        <rect x="134" y="32" width="28" height="14" rx="2" fill={accent} fillOpacity="0.45" />
+        <rect x="134" y="50" width="28" height="20" rx="2" fill={accent} fillOpacity="0.7" />
+        {/* Status bar */}
+        <rect x="18" y="96" width="164" height="14" rx="3" fill="white" fillOpacity="0.1" />
+        <circle cx="30" cy="103" r="3" fill="#4ade80" />
+        <text x="38" y="106" fill="white" fontSize="6.5" fillOpacity="0.8">5 appointments today · 2 in progress</text>
       </svg>
     );
   }
