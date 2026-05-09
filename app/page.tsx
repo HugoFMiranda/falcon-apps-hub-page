@@ -1,13 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Moon, Sun, Copy, Check, Eye, EyeOff, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const THEME_KEY = "falcon-hub-theme";
+
+interface EnvLink {
+  label: string;
+  href: string;
+  url: string;
+  demo?: { email: string; password: string };
+}
 
 interface AppDef {
   id: string;
@@ -17,6 +24,7 @@ interface AppDef {
   description: string;
   tags: string[];
   colors: { bgLight: string; bgDark: string; accent: string };
+  environments?: EnvLink[];
 }
 
 const APPS: AppDef[] = [
@@ -61,6 +69,33 @@ const APPS: AppDef[] = [
       bgDark: "linear-gradient(135deg, #052e16 0%, #14532d 100%)",
       accent: "#16a34a",
     },
+  },
+  {
+    id: "broke-but-optimistic",
+    name: "Broke But Optimistic",
+    url: "unbroke-finances.vercel.app",
+    href: "https://unbroke-finances.vercel.app/",
+    description:
+      "Personal finance workspace for tracking activity, planning commitments, managing debt payoff, and monitoring cash flow — all in one authenticated app.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "NextAuth"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+      bgDark: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
+      accent: "#2563eb",
+    },
+    environments: [
+      {
+        label: "Live",
+        href: "https://unbroke-finances.vercel.app/",
+        url: "unbroke-finances.vercel.app",
+      },
+      {
+        label: "Demo",
+        href: "https://demo-bbo.falcon-apps.duckdns.org",
+        url: "demo-bbo.falcon-apps.duckdns.org",
+        demo: { email: "demo@bbo.test", password: "DemoPass123!" },
+      },
+    ],
   },
 ];
 
@@ -120,11 +155,153 @@ function AppMockup({ id, accent }: { id: string; accent: string }) {
     );
   }
 
+  if (id === "broke-but-optimistic") {
+    return (
+      <svg viewBox="0 0 200 120" className="w-full h-full" aria-hidden>
+        <rect x="18" y="10" width="164" height="100" rx="6" fill="white" fillOpacity="0.08" />
+        <rect x="28" y="20" width="60" height="28" rx="4" fill={accent} fillOpacity="0.18" />
+        <text x="58" y="31" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600" fillOpacity="0.9">Balance</text>
+        <text x="58" y="42" textAnchor="middle" fill={accent} fontSize="9" fontWeight="700">$4,200</text>
+        <rect x="112" y="20" width="60" height="28" rx="4" fill={accent} fillOpacity="0.1" />
+        <text x="142" y="31" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600" fillOpacity="0.9">Debt</text>
+        <text x="142" y="42" textAnchor="middle" fill={accent} fontSize="9" fontWeight="700">$1,850</text>
+        <rect x="28" y="56" width="144" height="4" rx="2" fill="white" fillOpacity="0.12" />
+        <rect x="28" y="56" width="90" height="4" rx="2" fill={accent} fillOpacity="0.7" />
+        <text x="28" y="72" fill={accent} fontSize="7" fillOpacity="0.7">Transactions</text>
+        <rect x="28" y="77" width="80" height="3" rx="1.5" fill="white" fillOpacity="0.2" />
+        <rect x="28" y="84" width="110" height="3" rx="1.5" fill="white" fillOpacity="0.15" />
+        <rect x="28" y="91" width="65" height="3" rx="1.5" fill="white" fillOpacity="0.2" />
+        <rect x="28" y="98" width="95" height="3" rx="1.5" fill="white" fillOpacity="0.15" />
+        <circle cx="160" cy="80" r="16" fill={accent} fillOpacity="0.12" stroke={accent} strokeWidth="1" strokeOpacity="0.4" />
+        <text x="160" y="78" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">+12%</text>
+        <text x="160" y="87" textAnchor="middle" fill={accent} fontSize="6" fillOpacity="0.7">savings</text>
+      </svg>
+    );
+  }
+
   return null;
+}
+
+function DemoModal({
+  env,
+  appName,
+  onClose,
+}: {
+  env: EnvLink;
+  appName: string;
+  onClose: () => void;
+}) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [copied, setCopied] = useState<"email" | "password" | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  function copy(text: string, field: "email" | "password") {
+    navigator.clipboard.writeText(text);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 2000);
+  }
+
+  const creds = env.demo!;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        ref={dialogRef}
+        className="relative w-full max-w-sm mx-4 bg-background border border-border rounded-xl shadow-2xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          aria-label="Close"
+        >
+          <X className="size-4" />
+        </button>
+
+        <h3 className="font-semibold text-base leading-snug pr-8">{appName}</h3>
+        <p className="text-sm text-muted-foreground mt-0.5 mb-5">
+          Use these credentials to explore the demo.
+        </p>
+
+        <div className="space-y-3">
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
+              Email
+            </p>
+            <div className="flex items-center gap-2 bg-muted/60 rounded-lg px-3 py-2.5">
+              <span className="flex-1 text-sm font-mono select-all">{creds.email}</span>
+              <button
+                onClick={() => copy(creds.email, "email")}
+                className="shrink-0 p-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Copy email"
+              >
+                {copied === "email" ? (
+                  <Check className="size-3.5 text-green-500" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
+              Password
+            </p>
+            <div className="flex items-center gap-2 bg-muted/60 rounded-lg px-3 py-2.5">
+              <span className="flex-1 text-sm font-mono select-all tracking-wider">
+                {showPassword ? creds.password : "•".repeat(creds.password.length)}
+              </span>
+              <button
+                onClick={() => setShowPassword((v) => !v)}
+                className="shrink-0 p-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+              </button>
+              <button
+                onClick={() => copy(creds.password, "password")}
+                className="shrink-0 p-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Copy password"
+              >
+                {copied === "password" ? (
+                  <Check className="size-3.5 text-green-500" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <a
+          href={env.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(buttonVariants({ size: "sm" }), "w-full justify-center mt-5")}
+          onClick={onClose}
+        >
+          Open Demo →
+        </a>
+      </div>
+    </div>
+  );
 }
 
 export default function HubPage() {
   const [isDark, setIsDark] = useState(false);
+  const [demoModal, setDemoModal] = useState<{ env: EnvLink; appName: string } | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(THEME_KEY);
@@ -138,6 +315,10 @@ export default function HubPage() {
     document.documentElement.classList.toggle("dark", next);
     document.documentElement.style.colorScheme = next ? "dark" : "light";
     localStorage.setItem(THEME_KEY, next ? "dark" : "light");
+  }
+
+  function openDemo(env: EnvLink, appName: string) {
+    setDemoModal({ env, appName });
   }
 
   return (
@@ -213,14 +394,43 @@ export default function HubPage() {
               </div>
 
               <div className="px-5 pb-5">
-                <a
-                  href={app.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(buttonVariants({ size: "sm" }), "w-full justify-center")}
-                >
-                  Go to app →
-                </a>
+                {app.environments ? (
+                  <div className="flex gap-2">
+                    {app.environments.map((env) =>
+                      env.demo ? (
+                        <button
+                          key={env.label}
+                          onClick={() => openDemo(env, app.name)}
+                          className={cn(
+                            buttonVariants({ size: "sm", variant: "outline" }),
+                            "flex-1 justify-center"
+                          )}
+                        >
+                          {env.label} →
+                        </button>
+                      ) : (
+                        <a
+                          key={env.label}
+                          href={env.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(buttonVariants({ size: "sm" }), "flex-1 justify-center")}
+                        >
+                          {env.label} →
+                        </a>
+                      )
+                    )}
+                  </div>
+                ) : (
+                  <a
+                    href={app.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(buttonVariants({ size: "sm" }), "w-full justify-center")}
+                  >
+                    Go to app →
+                  </a>
+                )}
               </div>
             </Card>
           ))}
@@ -240,6 +450,14 @@ export default function HubPage() {
           </a>
         </div>
       </footer>
+
+      {demoModal && (
+        <DemoModal
+          env={demoModal.env}
+          appName={demoModal.appName}
+          onClose={() => setDemoModal(null)}
+        />
+      )}
     </div>
   );
 }
