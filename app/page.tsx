@@ -20,7 +20,8 @@ interface AppDef {
   id: string;
   name: string;
   url: string;
-  href: string;
+  href?: string;
+  hosted: boolean;
   description: string;
   tags: string[];
   colors: { bgLight: string; bgDark: string; accent: string };
@@ -33,6 +34,7 @@ const APPS: AppDef[] = [
     name: "Agendex",
     url: "agendex.falcon-apps.duckdns.org",
     href: "https://agendex.falcon-apps.duckdns.org",
+    hosted: true,
     description:
       "Appointment scheduling and clinic management SaaS. Multi-tenant, multi-location, with public booking pages and a live appointment queue.",
     tags: ["Laravel", "PHP 8.4", "React", "Inertia.js", "TypeScript", "SQLite", "Tailwind"],
@@ -47,6 +49,7 @@ const APPS: AppDef[] = [
     name: "Broke But Optimistic",
     url: "unbroke-finances.vercel.app",
     href: "https://unbroke-finances.vercel.app/",
+    hosted: true,
     description:
       "Personal finance workspace for tracking activity, planning commitments, managing debt payoff, and monitoring cash flow — all in one authenticated app.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "NextAuth"],
@@ -74,6 +77,7 @@ const APPS: AppDef[] = [
     name: "Falcon Tools",
     url: "tools.falcon-apps.duckdns.org",
     href: "https://tools.falcon-apps.duckdns.org",
+    hosted: true,
     description:
       "Browser-based PDF utility suite. Reorder, merge, and compress PDFs — no data leaves your browser.",
     tags: ["PHP", "Vanilla JS", "QPDF", "Nginx"],
@@ -88,6 +92,7 @@ const APPS: AppDef[] = [
     name: "Algorithm Playground",
     url: "playground.falcon-apps.duckdns.org",
     href: "https://playground.falcon-apps.duckdns.org",
+    hosted: true,
     description:
       "Interactive visualizer with step-by-step playback for sorting, graph traversal, and pathfinding algorithms.",
     tags: ["Next.js", "TypeScript", "Tailwind", "Zustand", "Framer Motion"],
@@ -102,6 +107,7 @@ const APPS: AppDef[] = [
     name: "Food Twin",
     url: "food.falcon-apps.duckdns.org",
     href: "https://food.falcon-apps.duckdns.org",
+    hosted: true,
     description:
       "Find foods with identical nutritional profiles to swap ingredients without changing your macro targets.",
     tags: ["Next.js", "TypeScript", "SQLite", "Prisma", "tRPC", "Bun"],
@@ -417,6 +423,17 @@ export default function HubPage() {
                   <div className="flex-1 min-w-0 bg-background/50 rounded px-2 py-0.5 text-[10px] text-muted-foreground font-mono truncate">
                     {app.url}
                   </div>
+                  {app.hosted ? (
+                    <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-medium text-green-600 dark:text-green-400">
+                      <span className="size-1.5 rounded-full bg-green-500 inline-block" />
+                      Live
+                    </span>
+                  ) : (
+                    <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground">
+                      <span className="size-1.5 rounded-full bg-muted-foreground/50 inline-block" />
+                      Local
+                    </span>
+                  )}
                 </div>
                 <div
                   className="h-36 p-3"
@@ -440,45 +457,47 @@ export default function HubPage() {
                 </div>
               </div>
 
-              <div className="px-5 pb-5">
-                {app.environments ? (
-                  <div className="flex gap-2">
-                    {app.environments.map((env) =>
-                      env.demo ? (
-                        <button
-                          key={env.label}
-                          onClick={() => openDemo(env, app.name)}
-                          className={cn(
-                            buttonVariants({ size: "sm", variant: "outline" }),
-                            "flex-1 justify-center"
-                          )}
-                        >
-                          {env.label} →
-                        </button>
-                      ) : (
-                        <a
-                          key={env.label}
-                          href={env.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cn(buttonVariants({ size: "sm" }), "flex-1 justify-center")}
-                        >
-                          {env.label} →
-                        </a>
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <a
-                    href={app.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(buttonVariants({ size: "sm" }), "w-full justify-center")}
-                  >
-                    Go to app →
-                  </a>
-                )}
-              </div>
+              {(app.environments || app.href) && (
+                <div className="px-5 pb-5">
+                  {app.environments ? (
+                    <div className="flex gap-2">
+                      {app.environments.map((env) =>
+                        env.demo ? (
+                          <button
+                            key={env.label}
+                            onClick={() => openDemo(env, app.name)}
+                            className={cn(
+                              buttonVariants({ size: "sm", variant: "outline" }),
+                              "flex-1 justify-center"
+                            )}
+                          >
+                            {env.label} →
+                          </button>
+                        ) : (
+                          <a
+                            key={env.label}
+                            href={env.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(buttonVariants({ size: "sm" }), "flex-1 justify-center")}
+                          >
+                            {env.label} →
+                          </a>
+                        )
+                      )}
+                    </div>
+                  ) : (
+                    <a
+                      href={app.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(buttonVariants({ size: "sm" }), "w-full justify-center")}
+                    >
+                      Go to app →
+                    </a>
+                  )}
+                </div>
+              )}
             </Card>
           ))}
         </div>
