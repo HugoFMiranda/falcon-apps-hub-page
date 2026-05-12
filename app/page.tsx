@@ -117,6 +117,21 @@ const APPS: AppDef[] = [
       accent: "#16a34a",
     },
   },
+  {
+    id: "anime-calendar",
+    name: "AniCal",
+    url: "anime-calendar.falcon-apps.duckdns.org",
+    href: "https://anime-calendar.falcon-apps.duckdns.org",
+    hosted: true,
+    description:
+      "Track your seasonal anime lineup with a weekly calendar view. See airing schedules, mark episodes watched, and never lose track of the current season.",
+    tags: ["Laravel", "PHP 8.4", "React", "Inertia.js", "TypeScript", "SQLite", "Tailwind"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%)",
+      bgDark: "linear-gradient(135deg, #2e1065 0%, #4a044e 100%)",
+      accent: "#a855f7",
+    },
+  },
 ];
 
 function AppMockup({ id, accent }: { id: string; accent: string }) {
@@ -228,6 +243,42 @@ function AppMockup({ id, accent }: { id: string; accent: string }) {
         <circle cx="160" cy="80" r="16" fill={accent} fillOpacity="0.12" stroke={accent} strokeWidth="1" strokeOpacity="0.4" />
         <text x="160" y="78" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">+12%</text>
         <text x="160" y="87" textAnchor="middle" fill={accent} fontSize="6" fillOpacity="0.7">savings</text>
+      </svg>
+    );
+  }
+
+  if (id === "anime-calendar") {
+    return (
+      <svg viewBox="0 0 200 120" className="w-full h-full" aria-hidden>
+        {/* Week header */}
+        {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d, i) => (
+          <text key={d} x={16 + i * 26} y="16" fill="white" fontSize="6.5" fontWeight="600" fillOpacity={i === 3 ? 1 : 0.5}>{d}</text>
+        ))}
+        {/* Shows as colored blocks */}
+        <rect x="14" y="22" width="22" height="16" rx="2" fill={accent} fillOpacity="0.85" />
+        <text x="25" y="33" textAnchor="middle" fill="white" fontSize="5.5" fontWeight="600">23:00</text>
+        <rect x="14" y="42" width="22" height="16" rx="2" fill={accent} fillOpacity="0.4" />
+        <rect x="66" y="22" width="22" height="16" rx="2" fill={accent} fillOpacity="0.6" />
+        <rect x="66" y="42" width="22" height="22" rx="2" fill={accent} fillOpacity="0.85" />
+        <text x="77" y="55" textAnchor="middle" fill="white" fontSize="5.5" fontWeight="600">00:00</text>
+        <rect x="92" y="30" width="22" height="16" rx="2" fill={accent} fillOpacity="0.45" />
+        <rect x="118" y="22" width="22" height="22" rx="2" fill={accent} />
+        <text x="129" y="35" textAnchor="middle" fill="white" fontSize="5.5" fontWeight="700">NEW</text>
+        <rect x="118" y="48" width="22" height="14" rx="2" fill={accent} fillOpacity="0.5" />
+        <rect x="144" y="26" width="22" height="16" rx="2" fill={accent} fillOpacity="0.55" />
+        <rect x="144" y="46" width="22" height="18" rx="2" fill={accent} fillOpacity="0.7" />
+        <rect x="170" y="22" width="22" height="14" rx="2" fill={accent} fillOpacity="0.4" />
+        <rect x="170" y="40" width="22" height="22" rx="2" fill={accent} fillOpacity="0.65" />
+        {/* Progress bar */}
+        <rect x="14" y="76" width="178" height="5" rx="2.5" fill="white" fillOpacity="0.12" />
+        <rect x="14" y="76" width="110" height="5" rx="2.5" fill={accent} fillOpacity="0.7" />
+        <text x="14" y="92" fill="white" fontSize="7" fillOpacity="0.6">Season progress</text>
+        <text x="192" y="92" textAnchor="end" fill={accent} fontSize="7" fontWeight="600">62%</text>
+        {/* Watched badge */}
+        <rect x="14" y="98" width="40" height="14" rx="3" fill={accent} fillOpacity="0.2" />
+        <text x="34" y="108" textAnchor="middle" fill={accent} fontSize="6.5" fontWeight="600">✓ 18 ep</text>
+        <rect x="58" y="98" width="40" height="14" rx="3" fill="white" fillOpacity="0.08" />
+        <text x="78" y="108" textAnchor="middle" fill="white" fontSize="6.5" fillOpacity="0.5">11 left</text>
       </svg>
     );
   }
@@ -425,7 +476,10 @@ export default function HubPage() {
                   </div>
                   {app.hosted ? (
                     <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-medium text-green-600 dark:text-green-400">
-                      <span className="size-1.5 rounded-full bg-green-500 inline-block" />
+                      <span className="relative flex size-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+                        <span className="relative inline-flex size-1.5 rounded-full bg-green-500" />
+                      </span>
                       Live
                     </span>
                   ) : (
