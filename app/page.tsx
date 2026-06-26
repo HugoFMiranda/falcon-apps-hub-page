@@ -66,8 +66,8 @@ const APPS: AppDef[] = [
       },
       {
         label: "Demo",
-        href: "https://demo-bbo.falcon-apps.duckdns.org",
-        url: "demo-bbo.falcon-apps.duckdns.org",
+        href: "https://bbo.falcon-apps.duckdns.org",
+        url: "bbo.falcon-apps.duckdns.org",
         demo: { email: "demo@bbo.test", password: "DemoPass123!" },
       },
     ],
@@ -115,6 +115,21 @@ const APPS: AppDef[] = [
       bgLight: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
       bgDark: "linear-gradient(135deg, #052e16 0%, #14532d 100%)",
       accent: "#16a34a",
+    },
+  },
+  {
+    id: "casefile",
+    name: "Casefile",
+    url: "casefile.falcon-apps.duckdns.org",
+    href: "https://casefile.falcon-apps.duckdns.org",
+    hosted: true,
+    description:
+      "A daily mystery puzzle game. Read the clues, place eight suspects on a manor floor plan, and identify the killer — one new case every day.",
+    tags: ["Laravel", "PHP 8.4", "React", "Inertia.js", "TypeScript", "SQLite", "Tailwind"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #fafaf9 0%, #e7e5e4 100%)",
+      bgDark: "linear-gradient(135deg, #1c1917 0%, #292524 100%)",
+      accent: "#d97706",
     },
   },
   {
@@ -243,6 +258,50 @@ function AppMockup({ id, accent }: { id: string; accent: string }) {
         <circle cx="160" cy="80" r="16" fill={accent} fillOpacity="0.12" stroke={accent} strokeWidth="1" strokeOpacity="0.4" />
         <text x="160" y="78" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">+12%</text>
         <text x="160" y="87" textAnchor="middle" fill={accent} fontSize="6" fillOpacity="0.7">savings</text>
+      </svg>
+    );
+  }
+
+  if (id === "casefile") {
+    return (
+      <svg viewBox="0 0 200 120" className="w-full h-full" aria-hidden>
+        {/* Manor grid */}
+        {[0,1,2,3].map((row) =>
+          [0,1,2,3,4].map((col) => (
+            <rect
+              key={`${row}-${col}`}
+              x={28 + col * 22}
+              y={10 + row * 22}
+              width={20}
+              height={20}
+              rx="2"
+              fill="white"
+              fillOpacity="0.07"
+              stroke={accent}
+              strokeOpacity="0.2"
+              strokeWidth="0.75"
+            />
+          ))
+        )}
+        {/* Highlighted room */}
+        <rect x="28" y="10" width="42" height="42" rx="2" fill={accent} fillOpacity="0.12" stroke={accent} strokeWidth="1" strokeOpacity="0.5" />
+        {/* Suspect tokens */}
+        <circle cx="38" cy="31" r="7" fill={accent} fillOpacity="0.9" />
+        <text x="38" y="35" textAnchor="middle" fill="white" fontSize="8" fontWeight="700">?</text>
+        <circle cx="60" cy="53" r="7" fill={accent} fillOpacity="0.5" />
+        <circle cx="94" cy="20" r="7" fill={accent} fillOpacity="0.35" />
+        <circle cx="116" cy="42" r="7" fill={accent} fillOpacity="0.4" />
+        <circle cx="138" cy="20" r="7" fill={accent} fillOpacity="0.3" />
+        {/* Clue panel */}
+        <rect x="156" y="10" width="36" height="78" rx="3" fill="white" fillOpacity="0.08" stroke={accent} strokeOpacity="0.15" strokeWidth="0.75" />
+        <rect x="161" y="16" width="26" height="2.5" rx="1.25" fill={accent} fillOpacity="0.5" />
+        <rect x="161" y="22" width="20" height="2.5" rx="1.25" fill="white" fillOpacity="0.25" />
+        <rect x="161" y="28" width="24" height="2.5" rx="1.25" fill="white" fillOpacity="0.2" />
+        <rect x="161" y="34" width="18" height="2.5" rx="1.25" fill="white" fillOpacity="0.25" />
+        <rect x="161" y="40" width="22" height="2.5" rx="1.25" fill="white" fillOpacity="0.2" />
+        {/* Bottom bar */}
+        <rect x="28" y="98" width="120" height="14" rx="3" fill={accent} fillOpacity="0.15" />
+        <text x="88" y="108" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">Identify the killer</text>
       </svg>
     );
   }
