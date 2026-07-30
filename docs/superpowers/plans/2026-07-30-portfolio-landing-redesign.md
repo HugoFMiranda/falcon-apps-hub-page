@@ -22,6 +22,12 @@
 - **Work happens in the `~/falcon-hub-redesign` worktree** on branch
   `redesign/portfolio-landing`. `/var/www/falcon-hub` is the live site — never
   edit or build there.
+- **All `motion/react` variant objects MUST be annotated `: Variants`**
+  (`import { motion, type Variants } from "motion/react"`). Without the
+  annotation, a literal `ease: [0.22, 1, 0.36, 1]` widens to `number[]`, which
+  is not assignable to motion's tuple-based `Easing` type, and `npm run build`
+  fails at type-check. Task 2 hit this and fixed it in `hero/hero.tsx` and
+  `portfolio/index.tsx`; any new or rewritten variants object must keep it.
 
 ## Global Constraints
 
@@ -402,7 +408,7 @@ Delete the stock carousel and image data entirely. The new file keeps the regist
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -411,7 +417,7 @@ import { APPS, type EnvLink } from "@/lib/apps";
 import AppMockup from "@/components/app-mockup";
 import DemoModal from "@/components/demo-modal";
 
-const FADE_UP_ANIMATION_VARIANTS = {
+const FADE_UP_ANIMATION_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
@@ -420,7 +426,7 @@ const FADE_UP_ANIMATION_VARIANTS = {
   },
 };
 
-const STAGGER_ANIMATION_VARIANTS = {
+const STAGGER_ANIMATION_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
