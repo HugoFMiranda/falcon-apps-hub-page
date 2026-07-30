@@ -76,7 +76,7 @@ export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) 
     <>
       <Navbar navigationData={dynamicNavigationData} />
       <main>
-        <HeroPage stats={stats} />
+        <HeroPage />
         <GitHubSection stats={stats} />
         <Projects />
         <About />

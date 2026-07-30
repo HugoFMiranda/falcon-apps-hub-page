@@ -1,10 +1,9 @@
 import HeroSection from "@/components/shadcn-space/pages/landing-page-01/hero/hero";
-import type { GitHubStats } from "@/lib/github";
 
-const HeroPage = ({ stats }: { stats: GitHubStats }) => {
+const HeroPage = () => {
   return (
     <div>
-      <HeroSection stats={stats} />
+      <HeroSection />
     </div>
   );
 };

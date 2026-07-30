@@ -1,5 +1,4 @@
 "use client";
-import Logo from "@/assets/logo/logo";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -57,10 +56,7 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                 <div className="border-x border-border px-4 lg:px-10 py-4 flex items-center justify-between">
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-1">
-                            <a href="#">
-                                <Logo />
-                            </a>
-                            <span className="max-lg:hidden flex items-center gap-2 px-5 py-2.5">
+                            <span className="flex items-center gap-2 py-2.5 text-foreground">
                                 <MapPin size={16} />
                                 <span>Based in Portugal</span>
                             </span>
@@ -84,7 +80,7 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                             </button>
-                            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
                                 <DropdownMenuTrigger
                                     aria-label="Open menu"
                                     className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer"

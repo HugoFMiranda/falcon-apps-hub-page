@@ -13,6 +13,8 @@ export interface AppDef {
   hosted: boolean;
   description: string;
   tags: string[];
+  /** Public GitHub repo URL. Absent means the source is private. */
+  repo?: string;
   colors: { bgLight: string; bgDark: string; accent: string };
   environments?: EnvLink[];
 }
@@ -70,6 +72,7 @@ export const APPS: AppDef[] = [
     description:
       "Browser-based PDF utility suite. Reorder, merge, and compress PDFs — no data leaves your browser.",
     tags: ["PHP", "Vanilla JS", "QPDF", "Nginx"],
+    repo: "https://github.com/HugoFMiranda/falcon-tools",
     colors: {
       bgLight: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
       bgDark: "linear-gradient(135deg, #431407 0%, #7c2d12 100%)",
@@ -85,6 +88,7 @@ export const APPS: AppDef[] = [
     description:
       "Interactive visualizer with step-by-step playback for sorting, graph traversal, and pathfinding algorithms.",
     tags: ["Next.js", "TypeScript", "Tailwind", "Zustand", "Framer Motion"],
+    repo: "https://github.com/HugoFMiranda/algorithm-playground",
     colors: {
       bgLight: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
       bgDark: "linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%)",
@@ -100,6 +104,7 @@ export const APPS: AppDef[] = [
     description:
       "Find foods with identical nutritional profiles to swap ingredients without changing your macro targets.",
     tags: ["Next.js", "TypeScript", "SQLite", "Prisma", "tRPC", "Bun"],
+    repo: "https://github.com/HugoFMiranda/food-twin",
     colors: {
       bgLight: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
       bgDark: "linear-gradient(135deg, #052e16 0%, #14532d 100%)",

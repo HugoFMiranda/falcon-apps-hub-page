@@ -61,6 +61,7 @@ const certifications = [
 const skills = [
   "Laravel",
   "React",
+  "Inertia.js",
   "AureliaJS",
   "TypeScript",
   "PHP",
@@ -87,12 +88,14 @@ export default function About() {
 
       <div className="border-y border-border">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
-          <div className="border-x border-border p-6 lg:p-10 flex flex-col gap-6 max-w-3xl">
+          <div className="border-x border-border p-6 lg:p-10 flex flex-col gap-6">
             <p className="text-lg text-muted-foreground">
-              Senior Full Stack Developer focused on building reliable, maintainable
+              Software developer focused on building reliable, maintainable
               production web applications. I work mainly with Laravel, React and
-              AureliaJS across backend development, APIs, frontend implementation,
+              Inertia across backend development, APIs, frontend implementation,
               debugging, refactoring, deployment support and system maintenance.
+              I&apos;m also deep into AI-powered development — agents, MCP, and
+              building with the tooling around them.
             </p>
             <p className="text-lg text-muted-foreground">
               I&apos;m trusted with work that needs ownership: planning features,

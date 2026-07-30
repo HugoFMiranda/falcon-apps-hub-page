@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+# deploy staging/rollback copies of the build (.next.new, .next.old, .next.live)
+/.next.*
 
 # production
 /build

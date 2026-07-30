@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import Logo from "@/assets/logo/logo";
 
 export interface FooterNavItem {
   label: string;
@@ -27,7 +26,7 @@ export default function Footer({
           <div className="border-x border-border px-6 py-12 md:py-16 lg:px-12 lg:py-20">
             <div className="flex flex-col gap-12 md:gap-16">
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 justify-between items-start lg:items-center">
-                <Logo />
+                <span className="text-xl font-semibold tracking-tight text-foreground">Hugo Miranda</span>
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-4 sm:gap-x-10 md:gap-x-12">
                   {footernavItems.map((item, index) => (
                     <a

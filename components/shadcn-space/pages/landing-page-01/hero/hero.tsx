@@ -21,14 +21,10 @@ function CountUp({ value }: { value: number }) {
   return <motion.span>{rounded}</motion.span>;
 }
 
-const HeroSection = ({ stats }: { stats: GitHubStats }) => {
-    // The repo tile is dropped entirely when the GitHub API is unreachable —
-    // claiming "0+ public repositories" is worse than saying nothing.
+const HeroSection = () => {
     const statsData: { title: string; count: number }[] = [
         { title: "Years writing code", count: new Date().getFullYear() - 2018 },
-        ...(stats.ok && stats.publicRepos !== null
-            ? [{ title: "Public repositories", count: stats.publicRepos }]
-            : []),
+        { title: "Years in the field", count: 4 },
     ];
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
@@ -88,15 +84,19 @@ const HeroSection = ({ stats }: { stats: GitHubStats }) => {
                                   variants={itemVariants}
                                   className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium"
                                 >
-                                  Senior Full Stack Developer
+                                  Software Developer
                                 </motion.h1>
                             </div>
                             <motion.div variants={itemVariants} className="flex flex-col gap-4">
-                                <p className="text-lg text-muted-foreground">
-                                  I build reliable, maintainable production web applications — mostly Laravel,
-                                  React and AureliaJS. Backend, APIs, frontend, and the deployments that keep
-                                  them running.
-                                </p>
+                                <figure className="flex flex-col gap-2">
+                                  <blockquote className="text-lg text-muted-foreground border-l-2 border-border pl-4">
+                                    &ldquo;Any fool can write code that a computer can understand. Good
+                                    programmers write code that humans can understand.&rdquo;
+                                  </blockquote>
+                                  <figcaption className="text-sm text-muted-foreground pl-4">
+                                    — Martin Fowler
+                                  </figcaption>
+                                </figure>
                                 <motion.div whileHover="hover" initial="initial" whileTap={{ scale: 0.96 }} className="w-fit">
                                   <Button render={<a href="#projects" />} className="group w-fit h-auto px-5 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/80 transition-all duration-500 ease-[0.23,1,0.32,1]">
                                     <motion.span
