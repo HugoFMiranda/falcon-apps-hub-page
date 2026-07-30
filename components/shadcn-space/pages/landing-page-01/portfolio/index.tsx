@@ -93,14 +93,18 @@ const Projects = () => {
           <div className="border-x border-border p-5 md:p-8">
             <Carousel setApi={setApi} opts={{ align: "start", loop: false, slidesToScroll: 1 }}>
               <CarouselContent className="-ml-6">
-                {APPS.map((app, index) => (
+                {APPS.map((app) => (
                   <CarouselItem key={app.id} className="pl-6 basis-full md:basis-1/2 lg:basis-1/3">
+                    {/*
+                      No `whileInView` here: slides clipped by CarouselContent's
+                      overflow-hidden never intersect the viewport, so they would
+                      stay at opacity 0 until scrolled to. Animate on mount instead,
+                      with no per-index delay, so every slide is visible on arrival.
+                    */}
                     <motion.div
                       variants={FADE_UP_ANIMATION_VARIANTS}
                       initial="hidden"
-                      whileInView="show"
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
+                      animate="show"
                       className="h-full"
                     >
                       <AppCard
@@ -177,7 +181,7 @@ function AppCard({
   onOpenDemo: (env: EnvLink) => void;
 }) {
   return (
-    <Card className="overflow-hidden flex flex-col p-0 gap-0">
+    <Card className="h-full overflow-hidden flex flex-col p-0 gap-0">
       <div className="border-b border-border/60">
         <div className="bg-muted/60 px-3 py-2 flex items-center gap-2 border-b border-border/40">
           <div className="flex gap-1.5 shrink-0">
@@ -213,7 +217,7 @@ function AppCard({
 
       <div className="flex flex-col flex-1 p-5 gap-4">
         <div className="space-y-1.5">
-          <h2 className="font-semibold text-base leading-snug">{app.name}</h2>
+          <h3 className="font-semibold text-base leading-snug">{app.name}</h3>
           <p className="text-muted-foreground text-sm leading-relaxed">{app.description}</p>
         </div>
         <div className="flex flex-wrap gap-1.5">

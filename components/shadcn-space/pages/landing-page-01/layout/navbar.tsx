@@ -60,10 +60,10 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                             <a href="#">
                                 <Logo />
                             </a>
-                            <a href="#" className="max-lg:hidden flex items-center gap-2 px-5 py-2.5">
+                            <span className="max-lg:hidden flex items-center gap-2 px-5 py-2.5">
                                 <MapPin size={16} />
                                 <span>Based in Portugal</span>
-                            </a>
+                            </span>
                         </div>
                         <div className="flex items-center gap-2">
                             <AnimatePresence>
@@ -85,7 +85,10 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                             </button>
                             <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-                                <DropdownMenuTrigger className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer">
+                                <DropdownMenuTrigger
+                                    aria-label="Open menu"
+                                    className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer"
+                                >
                                     <Menu className="w-4 h-4 text-foreground cursor-pointer" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent
@@ -99,7 +102,7 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                                             <p className="text-lg font-medium text-foreground">
                                                 Menu
                                             </p>
-                                            <Button variant="outline" onClick={() => setMenuOpen(false)} className="h-auto p-2.5 cursor-pointer rounded-full">
+                                            <Button variant="outline" aria-label="Close menu" onClick={() => setMenuOpen(false)} className="h-auto p-2.5 cursor-pointer rounded-full">
                                                 <X size={20} />
                                             </Button>
                                         </div>
@@ -117,7 +120,7 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                                     </div>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                            <Button className="group max-lg:hidden h-auto px-5 py-2.5 flex items-center gap-2 rounded-full cursor-pointer hover:bg-primary/80">
+                            <Button render={<a href="#contact" />} className="group max-lg:hidden h-auto px-5 py-2.5 flex items-center gap-2 rounded-full cursor-pointer hover:bg-primary/80">
                                 <ArrowUpRight size={16} className="transition-all duration-300 group-hover:rotate-45" />
                                 <span>Hire me</span>
                             </Button>

@@ -1,7 +1,9 @@
 import { Star, Users, BookMarked } from "lucide-react";
 import type { GitHubStats } from "@/lib/github";
 
+// Counts get thousands grouping; years must not (2020 → "2,020").
 const dash = (v: number | null) => (v === null ? "—" : v.toLocaleString());
+const dashYear = (v: number | null) => (v === null ? "—" : String(v));
 
 // lucide-react removed brand/logo icons (e.g. Github) in its v1 line;
 // this is a minimal inline stand-in for the GitHub mark.
@@ -25,7 +27,7 @@ export default function GitHubSection({ stats }: { stats: GitHubStats }) {
     { label: "Public repos", value: dash(stats.publicRepos), icon: BookMarked },
     { label: "Followers", value: dash(stats.followers), icon: Users },
     { label: "Stars earned", value: dash(stats.totalStars), icon: Star },
-    { label: "On GitHub since", value: dash(stats.memberSince), icon: GithubIcon },
+    { label: "On GitHub since", value: dashYear(stats.memberSince), icon: GithubIcon },
   ];
 
   return (

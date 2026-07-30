@@ -5,7 +5,7 @@ import { motion, useMotionValue, useTransform, animate, useInView, type Variants
 import { useEffect, useRef } from "react";
 import type { GitHubStats } from "@/lib/github";
 
-function CountUp({ value }: { value: string | any }) {
+function CountUp({ value }: { value: number }) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => Math.floor(latest));
 
@@ -22,9 +22,13 @@ function CountUp({ value }: { value: string | any }) {
 }
 
 const HeroSection = ({ stats }: { stats: GitHubStats }) => {
-    const statsData = [
+    // The repo tile is dropped entirely when the GitHub API is unreachable —
+    // claiming "0+ public repositories" is worse than saying nothing.
+    const statsData: { title: string; count: number }[] = [
         { title: "Years writing code", count: new Date().getFullYear() - 2018 },
-        { title: "Public repositories", count: stats.publicRepos ?? 0 },
+        ...(stats.ok && stats.publicRepos !== null
+            ? [{ title: "Public repositories", count: stats.publicRepos }]
+            : []),
     ];
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.1 });

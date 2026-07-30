@@ -125,6 +125,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    /* scroll-pt-24 keeps section headings clear of the ~73px sticky header */
+    @apply font-sans scroll-smooth scroll-pt-24;
   }
 }

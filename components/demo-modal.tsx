@@ -28,9 +28,15 @@ export default function DemoModal({
   }, [onClose]);
 
   function copy(text: string, field: "email" | "password") {
-    navigator.clipboard.writeText(text);
-    setCopied(field);
-    setTimeout(() => setCopied(null), 2000);
+    // navigator.clipboard is undefined in non-secure contexts (plain http),
+    // so guard the call and only flag "copied" once the write resolves.
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        setCopied(field);
+        setTimeout(() => setCopied(null), 2000);
+      })
+      .catch(() => {});
   }
 
   const creds = env.demo!;
