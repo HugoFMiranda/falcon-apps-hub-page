@@ -3,11 +3,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowUp, ArrowUpRight } from "lucide-react"
 import { motion, useMotionValue, useTransform, animate, useInView, type Variants } from "motion/react";
 import { useEffect, useRef } from "react";
-
-const statsData = [
-  { title: "Years writing code", count: 8 },
-  { title: "Public repositories", count: 59 },
-];
+import type { GitHubStats } from "@/lib/github";
 
 function CountUp({ value }: { value: string | any }) {
   const count = useMotionValue(0);
@@ -25,7 +21,11 @@ function CountUp({ value }: { value: string | any }) {
   return <motion.span>{rounded}</motion.span>;
 }
 
-const HeroSection = () => {
+const HeroSection = ({ stats }: { stats: GitHubStats }) => {
+    const statsData = [
+        { title: "Years writing code", count: new Date().getFullYear() - 2018 },
+        { title: "Public repositories", count: stats.publicRepos ?? 0 },
+    ];
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
@@ -93,21 +93,19 @@ const HeroSection = () => {
                                   React and AureliaJS. Backend, APIs, frontend, and the deployments that keep
                                   them running.
                                 </p>
-                                <a href="#projects">
-                                  <motion.div whileHover="hover" initial="initial" whileTap={{ scale: 0.96 }} className="w-fit">
-                                    <Button className="group w-fit h-auto px-5 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/80 transition-all duration-500 ease-[0.23,1,0.32,1]">
-                                      <motion.span
-                                          variants={{
-                                              initial: { x: 0, transition: { type: "spring", stiffness: 300, damping: 20 } },
-                                              hover: { x: 4, transition: { type: "spring", stiffness: 400, damping: 10 } }
-                                          }}
-                                      >
-                                          <ArrowUpRight size={16} className="transition-all duration-300 group-hover:rotate-45" />
-                                      </motion.span>
-                                      <span className="relative z-10 flex items-center gap-2 font-medium">Check Projects</span>
-                                    </Button>
-                                  </motion.div>
-                                </a>
+                                <motion.div whileHover="hover" initial="initial" whileTap={{ scale: 0.96 }} className="w-fit">
+                                  <Button render={<a href="#projects" />} className="group w-fit h-auto px-5 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/80 transition-all duration-500 ease-[0.23,1,0.32,1]">
+                                    <motion.span
+                                        variants={{
+                                            initial: { x: 0, transition: { type: "spring", stiffness: 300, damping: 20 } },
+                                            hover: { x: 4, transition: { type: "spring", stiffness: 400, damping: 10 } }
+                                        }}
+                                    >
+                                        <ArrowUpRight size={16} className="transition-all duration-300 group-hover:rotate-45" />
+                                    </motion.span>
+                                    <span className="relative z-10 flex items-center gap-2 font-medium">Check Projects</span>
+                                  </Button>
+                                </motion.div>
                             </motion.div>
                         </div>
                         <motion.div variants={itemVariants} className="flex items-center justify-between sm:justify-normal gap-8 md:gap-10 lg:gap-32">

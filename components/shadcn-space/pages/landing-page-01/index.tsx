@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
 import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
+import GitHubSection from "@/components/shadcn-space/pages/landing-page-01/github";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
 import Footer, {
   FooterNavItem,
 } from "@/components/shadcn-space/pages/landing-page-01/layout/footer";
 import type { NavigationSection } from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
+import type { GitHubStats } from "@/lib/github";
 
 const navigationData: NavigationSection[] = [
   { name: "GitHub", href: "#github" },
@@ -23,7 +25,7 @@ const footerNavItems: FooterNavItem[] = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function PortfolioLandingPage() {
+export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) {
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
@@ -72,7 +74,8 @@ export default function PortfolioLandingPage() {
     <>
       <Navbar navigationData={dynamicNavigationData} />
       <main>
-        <HeroPage />
+        <HeroPage stats={stats} />
+        <GitHubSection stats={stats} />
         <Projects />
       </main>
       <Footer footernavItems={footerNavItems} />
