@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
 import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
 import GitHubSection from "@/components/shadcn-space/pages/landing-page-01/github";
+import About from "@/components/shadcn-space/pages/landing-page-01/about";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
 import Footer, {
   FooterNavItem,
@@ -77,6 +78,7 @@ export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) 
         <HeroPage stats={stats} />
         <GitHubSection stats={stats} />
         <Projects />
+        <About />
       </main>
       <Footer footernavItems={footerNavItems} />
     </>
