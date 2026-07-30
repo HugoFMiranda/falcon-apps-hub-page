@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { ArrowUp, ArrowUpRight } from "lucide-react"
 import { motion, useMotionValue, useTransform, animate, useInView, type Variants } from "motion/react";
 import { useEffect, useRef } from "react";
-import type { GitHubStats } from "@/lib/github";
 
 function CountUp({ value }: { value: number }) {
   const count = useMotionValue(0);
@@ -94,7 +93,7 @@ const HeroSection = () => {
                                     programmers write code that humans can understand.&rdquo;
                                   </blockquote>
                                   <figcaption className="text-sm text-muted-foreground pl-4">
-                                    — Martin Fowler
+                                    Martin Fowler
                                   </figcaption>
                                 </figure>
                                 <motion.div whileHover="hover" initial="initial" whileTap={{ scale: 0.96 }} className="w-fit">

@@ -26,6 +26,18 @@ const Projects = () => {
 
   return (
     <section id="projects">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
+        <div className="border-x border-border px-5 md:px-8 py-8 lg:py-16 flex flex-col gap-4">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground m-1.5" />
+            <span className="text-base font-normal text-muted-foreground">Projects</span>
+          </div>
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-semibold text-foreground">
+            What I&apos;ve shipped lately.
+          </h2>
+        </div>
+      </div>
+
       <div className="border-y border-border">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
           <div className="border-x border-border flex flex-col">
@@ -85,7 +97,7 @@ function ProjectRow({
         ) : (
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
             <span className="size-1.5 rounded-full bg-muted-foreground/50 inline-block" />
-            Local
+            {app.status ?? "Local"}
           </span>
         )}
       </div>

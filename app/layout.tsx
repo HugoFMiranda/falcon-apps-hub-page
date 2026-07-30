@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hugo Miranda — Software Developer",
+  title: "Hugo Miranda, Software Developer",
   description:
     "Software developer building reliable, maintainable production web applications with Laravel, React and Next.js. Personal projects, GitHub activity and contact.",
 };

@@ -10,7 +10,6 @@ export interface FooterProps {
 }
 
 const defaultFooternavItems: FooterNavItem[] = [
-  { label: "GitHub", href: "#github" },
   { label: "Projects", href: "#projects" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
@@ -43,9 +42,6 @@ export default function Footer({
               <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center justify-between text-center md:text-left">
                 <p className="text-base text-muted-foreground">
                   © 2026 Hugo Miranda. All Rights Reserved.
-                </p>
-                <p className="text-base transition-colors text-muted-foreground">
-                  Built with Next.js, self-hosted.
                 </p>
               </div>
             </div>

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
 import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
-import GitHubSection from "@/components/shadcn-space/pages/landing-page-01/github";
 import About from "@/components/shadcn-space/pages/landing-page-01/about";
 import Contact from "@/components/shadcn-space/pages/landing-page-01/contact";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
@@ -11,27 +10,24 @@ import Footer, {
   FooterNavItem,
 } from "@/components/shadcn-space/pages/landing-page-01/layout/footer";
 import type { NavigationSection } from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
-import type { GitHubStats } from "@/lib/github";
 
 const navigationData: NavigationSection[] = [
-  { name: "GitHub", href: "#github" },
   { name: "Projects", href: "#projects" },
   { name: "About", href: "#about" },
   { name: "Contact", href: "#contact" },
 ];
 
 const footerNavItems: FooterNavItem[] = [
-  { label: "GitHub", href: "#github" },
   { label: "Projects", href: "#projects" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
-export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) {
+export default function PortfolioLandingPage() {
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
-    const sections = ["github", "projects", "about", "contact"];
+    const sections = ["projects", "about", "contact"];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 150; // offset for the sticky header
@@ -77,7 +73,6 @@ export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) 
       <Navbar navigationData={dynamicNavigationData} />
       <main>
         <HeroPage />
-        <GitHubSection stats={stats} />
         <Projects />
         <About />
         <Contact />

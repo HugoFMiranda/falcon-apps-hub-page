@@ -191,5 +191,40 @@ export default function AppMockup({ id, accent }: { id: string; accent: string }
     );
   }
 
+  if (id === "yomu") {
+    return (
+      <svg viewBox="0 0 200 120" className="w-full h-full" aria-hidden>
+        {/* Phone frame */}
+        <rect x="72" y="6" width="56" height="108" rx="7" fill="white" fillOpacity="0.9" />
+        <rect x="76" y="14" width="48" height="88" rx="3" fill={accent} fillOpacity="0.08" />
+        {/* Manga panels on the page */}
+        <rect x="80" y="18" width="40" height="26" rx="2" fill={accent} fillOpacity="0.75" />
+        <rect x="80" y="47" width="18" height="22" rx="2" fill={accent} fillOpacity="0.5" />
+        <rect x="102" y="47" width="18" height="22" rx="2" fill={accent} fillOpacity="0.35" />
+        <rect x="80" y="72" width="40" height="18" rx="2" fill={accent} fillOpacity="0.55" />
+        {/* Reading progress */}
+        <rect x="80" y="94" width="40" height="3" rx="1.5" fill={accent} fillOpacity="0.15" />
+        <rect x="80" y="94" width="26" height="3" rx="1.5" fill={accent} />
+        {/* Extension chips either side */}
+        <rect x="14" y="30" width="46" height="13" rx="6.5" fill={accent} fillOpacity="0.2" />
+        <text x="37" y="39" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">
+          extension
+        </text>
+        <rect x="14" y="49" width="46" height="13" rx="6.5" fill={accent} fillOpacity="0.12" />
+        <text x="37" y="58" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600" fillOpacity="0.8">
+          extension
+        </text>
+        <rect x="140" y="40" width="46" height="13" rx="6.5" fill={accent} fillOpacity="0.16" />
+        <text x="163" y="49" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600" fillOpacity="0.9">
+          extension
+        </text>
+        {/* Chapter counter */}
+        <text x="100" y="110" textAnchor="middle" fill={accent} fontSize="7" fontWeight="600">
+          ch. 42
+        </text>
+      </svg>
+    );
+  }
+
   return null;
 }

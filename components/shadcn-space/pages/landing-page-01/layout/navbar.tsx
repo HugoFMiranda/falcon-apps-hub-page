@@ -1,7 +1,6 @@
 "use client";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -42,6 +41,15 @@ const Navbar = ({ navigationData }: NavbarProps) => {
         setIsDark(document.documentElement.classList.contains("dark"));
     }, []);
 
+    useEffect(() => {
+        if (!menuOpen) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setMenuOpen(false);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [menuOpen]);
+
     const toggleTheme = () => {
         const next = !isDark;
         setIsDark(next);
@@ -80,42 +88,58 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                             </button>
-                            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
-                                <DropdownMenuTrigger
-                                    aria-label="Open menu"
-                                    className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer"
+                            {/*
+                              Plain state-toggled panel rather than a portalled menu
+                              primitive: anything that portals and autofocuses drags the
+                              document scroll with it when the trigger sits in a sticky
+                              header. This panel is positioned relative to the header and
+                              never takes focus, so opening it cannot move the page.
+                            */}
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setMenuOpen((v) => !v)}
+                                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                                    aria-expanded={menuOpen}
+                                    aria-controls="site-menu"
+                                    className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer flex items-center"
                                 >
-                                    <Menu className="w-4 h-4 text-foreground cursor-pointer" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    sideOffset={10}
-                                    className="min-w-xs sm:min-w-sm bg-background py-8 px-6 shadow-2xl rounded-3xl border border-border -mt-12 z-50"
-                                >
-                                    <div className="flex flex-col gap-6">
-                                        {/* Header */}
-                                        <div className="flex items-center justify-between">
-                                            <p className="text-lg font-medium text-foreground">
-                                                Menu
-                                            </p>
-                                            <Button variant="outline" aria-label="Close menu" onClick={() => setMenuOpen(false)} className="h-auto p-2.5 cursor-pointer rounded-full">
-                                                <X size={20} />
-                                            </Button>
-                                        </div>
-                                        <hr className="border-border" />
-                                        {/* Navigation */}
-                                        <ul className="flex flex-col gap-3.5">
-                                            {navigationData.map((item, index) => (
-                                                <NavLink
-                                                    key={index}
-                                                    item={item}
-                                                    onClick={() => setMenuOpen(false)}
-                                                />
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                    <Menu className="w-4 h-4 text-foreground" />
+                                </button>
+                                <AnimatePresence>
+                                    {menuOpen && (
+                                        <motion.div
+                                            id="site-menu"
+                                            initial={{ opacity: 0, y: -8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -8 }}
+                                            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                                            className="absolute right-0 top-full mt-3 z-50 w-[min(20rem,calc(100vw-2rem))] sm:w-96 bg-background py-8 px-6 shadow-2xl rounded-3xl border border-border"
+                                        >
+                                            <div className="flex flex-col gap-6">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-lg font-medium text-foreground">
+                                                        Menu
+                                                    </p>
+                                                    <Button variant="outline" aria-label="Close menu" onClick={() => setMenuOpen(false)} className="h-auto p-2.5 cursor-pointer rounded-full">
+                                                        <X size={20} />
+                                                    </Button>
+                                                </div>
+                                                <hr className="border-border" />
+                                                <ul className="flex flex-col gap-3.5">
+                                                    {navigationData.map((item, index) => (
+                                                        <NavLink
+                                                            key={index}
+                                                            item={item}
+                                                            onClick={() => setMenuOpen(false)}
+                                                        />
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                             <Button render={<a href="#contact" />} className="group max-lg:hidden h-auto px-5 py-2.5 flex items-center gap-2 rounded-full cursor-pointer hover:bg-primary/80">
                                 <ArrowUpRight size={16} className="transition-all duration-300 group-hover:rotate-45" />
                                 <span>Hire me</span>

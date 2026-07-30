@@ -1,33 +1,33 @@
 const experience = [
-  { role: "Senior Full Stack Developer", org: "Roboyo", period: "Apr 2025 — Present" },
-  { role: "Full Stack Developer", org: "Roboyo", period: "Jul 2023 — Apr 2025" },
-  { role: "Full Stack Developer (intern)", org: "Roboyo", period: "Apr 2023 — Jun 2023" },
-  { role: "IT Technician Intern / Junior Developer", org: "Capgemini", period: "Jan 2018 — Jun 2018" },
+  { role: "Senior Full Stack Developer", org: "Roboyo", period: "Apr 2025 to Present" },
+  { role: "Full Stack Developer", org: "Roboyo", period: "Jul 2023 to Apr 2025" },
+  { role: "Full Stack Developer (intern)", org: "Roboyo", period: "Apr 2023 to Jun 2023" },
+  { role: "IT Technician Intern / Junior Developer", org: "Capgemini", period: "Jan 2018 to Jun 2018" },
 ];
 
 const education = [
   {
     degree: "Master's, Computer Software Engineering",
     school: "Instituto Superior de Engenharia do Porto",
-    period: "2023 — 2024",
+    period: "2023 to 2024",
     completed: false,
   },
   {
     degree: "Bachelor's, Systems Engineering",
     school: "Instituto Superior de Engenharia do Porto",
-    period: "2020 — 2023",
+    period: "2020 to 2023",
     completed: true,
   },
   {
     degree: "CTeSP, Computer Networks and Systems",
-    school: "ISLA — Instituto Politécnico de Gestão e Tecnologia",
-    period: "2018 — 2020",
+    school: "ISLA, Instituto Politécnico de Gestão e Tecnologia",
+    period: "2018 to 2020",
     completed: true,
   },
   {
     degree: "Vocational Secondary, IT Equipment Management",
     school: "Escola Profissional de Gaia",
-    period: "2015 — 2018",
+    period: "2015 to 2018",
     completed: true,
   },
 ];
@@ -94,7 +94,7 @@ export default function About() {
               production web applications. I work mainly with Laravel, React and
               Inertia across backend development, APIs, frontend implementation,
               debugging, refactoring, deployment support and system maintenance.
-              I&apos;m also deep into AI-powered development — agents, MCP, and
+              I&apos;m also deep into AI-powered development, including agents, MCP, and
               building with the tooling around them.
             </p>
             <p className="text-lg text-muted-foreground">
@@ -102,7 +102,7 @@ export default function About() {
               coordinating tasks, reviewing code, supporting other developers, solving
               production issues, and delivering clean, practical solutions without
               unnecessary technical debt. I care about software that works in the real
-              world — secure, understandable, maintainable, and easy for teams to improve.
+              world: secure, understandable, maintainable, and easy for teams to improve.
             </p>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
