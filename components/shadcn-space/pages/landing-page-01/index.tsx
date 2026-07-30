@@ -1,13 +1,17 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useState, useEffect } from "react";
+import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
 import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
+import GitHubSection from "@/components/shadcn-space/pages/landing-page-01/github";
+import About from "@/components/shadcn-space/pages/landing-page-01/about";
+import Contact from "@/components/shadcn-space/pages/landing-page-01/contact";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
 import Footer, {
   FooterNavItem,
 } from "@/components/shadcn-space/pages/landing-page-01/layout/footer";
 import type { NavigationSection } from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
+import type { GitHubStats } from "@/lib/github";
 
 const navigationData: NavigationSection[] = [
   { name: "GitHub", href: "#github" },
@@ -23,23 +27,7 @@ const footerNavItems: FooterNavItem[] = [
   { label: "Contact", href: "#contact" },
 ];
 
-/**
- * Client shell: owns the scroll-spy state that drives the navbar's active link.
- *
- * Only Navbar (state), Hero (motion) and Projects (carousel/modal/theme observer)
- * genuinely need the client. The GitHub, About and Contact sections are static, so
- * they arrive as already-rendered server elements (`hero`, `github`, `children`)
- * and never join the client bundle.
- */
-export default function PortfolioLandingPage({
-  hero,
-  github,
-  children,
-}: {
-  hero: ReactNode;
-  github: ReactNode;
-  children: ReactNode;
-}) {
+export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) {
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
@@ -88,10 +76,11 @@ export default function PortfolioLandingPage({
     <>
       <Navbar navigationData={dynamicNavigationData} />
       <main>
-        {hero}
-        {github}
+        <HeroPage stats={stats} />
+        <GitHubSection stats={stats} />
         <Projects />
-        {children}
+        <About />
+        <Contact />
       </main>
       <Footer footernavItems={footerNavItems} />
     </>
