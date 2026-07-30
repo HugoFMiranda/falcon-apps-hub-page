@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Falcon Apps",
-  description: "A collection of personal tools and experiments by HugoFMiranda.",
+  title: "Hugo Miranda — Senior Full Stack Developer",
+  description:
+    "Senior Full Stack Developer building reliable, maintainable production web applications with Laravel, React and Next.js. Personal projects, GitHub activity and contact.",
 };
 
 export default function RootLayout({

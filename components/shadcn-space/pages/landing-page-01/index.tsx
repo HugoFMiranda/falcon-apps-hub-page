@@ -5,6 +5,7 @@ import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
 import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
 import GitHubSection from "@/components/shadcn-space/pages/landing-page-01/github";
 import About from "@/components/shadcn-space/pages/landing-page-01/about";
+import Contact from "@/components/shadcn-space/pages/landing-page-01/contact";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
 import Footer, {
   FooterNavItem,
@@ -79,6 +80,7 @@ export default function PortfolioLandingPage({ stats }: { stats: GitHubStats }) 
         <GitHubSection stats={stats} />
         <Projects />
         <About />
+        <Contact />
       </main>
       <Footer footernavItems={footerNavItems} />
     </>
