@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import HeroPage from "@/components/shadcn-space/pages/landing-page-01/hero";
+import Projects from "@/components/shadcn-space/pages/landing-page-01/portfolio";
 import Navbar from "@/components/shadcn-space/pages/landing-page-01/layout/navbar";
 import Footer, {
   FooterNavItem,
@@ -22,7 +23,7 @@ const footerNavItems: FooterNavItem[] = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Portfoliolandingpage() {
+export default function PortfolioLandingPage() {
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
@@ -72,6 +73,7 @@ export default function Portfoliolandingpage() {
       <Navbar navigationData={dynamicNavigationData} />
       <main>
         <HeroPage />
+        <Projects />
       </main>
       <Footer footernavItems={footerNavItems} />
     </>

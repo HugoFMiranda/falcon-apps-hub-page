@@ -4,8 +4,8 @@ import { ArrowUpRight, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type NavigationSection = {
@@ -37,6 +37,19 @@ const NavLink = ({
 
 const Navbar = ({ navigationData }: NavbarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isDark, setIsDark] = useState(false);
+
+    useEffect(() => {
+        setIsDark(document.documentElement.classList.contains("dark"));
+    }, []);
+
+    const toggleTheme = () => {
+        const next = !isDark;
+        setIsDark(next);
+        document.documentElement.classList.toggle("dark", next);
+        document.documentElement.style.colorScheme = next ? "dark" : "light";
+        localStorage.setItem("falcon-hub-theme", next ? "dark" : "light");
+    };
 
     return (
         <header className="sticky top-0 bg-background z-50 border-b border-border">
@@ -49,7 +62,7 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                             </a>
                             <a href="#" className="max-lg:hidden flex items-center gap-2 px-5 py-2.5">
                                 <MapPin size={16} />
-                                <span>Based on New York, USA</span>
+                                <span>Based in Portugal</span>
                             </a>
                         </div>
                         <div className="flex items-center gap-2">
@@ -64,6 +77,13 @@ const Navbar = ({ navigationData }: NavbarProps) => {
                                     />
                                 )}
                             </AnimatePresence>
+                            <button
+                                onClick={toggleTheme}
+                                aria-label="Toggle theme"
+                                className="rounded-full bg-background hover:bg-muted h-auto p-2.5 border border-border cursor-pointer"
+                            >
+                                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                            </button>
                             <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
                                 <DropdownMenuTrigger className="rounded-full bg-background hover:bg-muted h-auto p-2.5 gap-2 border border-border cursor-pointer">
                                     <Menu className="w-4 h-4 text-foreground cursor-pointer" />
