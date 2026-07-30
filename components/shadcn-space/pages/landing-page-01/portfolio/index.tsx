@@ -2,10 +2,10 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const FADE_UP_ANIMATION_VARIANTS = {
+const FADE_UP_ANIMATION_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
@@ -17,7 +17,7 @@ const FADE_UP_ANIMATION_VARIANTS = {
   },
 };
 
-const STAGGER_ANIMATION_VARIANTS = {
+const STAGGER_ANIMATION_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,

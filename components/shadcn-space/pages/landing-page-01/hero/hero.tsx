@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button"
 import { ArrowUp, ArrowUpRight } from "lucide-react"
-import { motion, useMotionValue, useTransform, animate, useInView } from "motion/react";
+import { motion, useMotionValue, useTransform, animate, useInView, type Variants } from "motion/react";
 import { useEffect, useRef } from "react";
 
 const statsData = [
@@ -35,7 +35,7 @@ const HeroSection = () => {
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -46,7 +46,7 @@ const HeroSection = () => {
         },
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
             opacity: 1,
@@ -58,7 +58,7 @@ const HeroSection = () => {
         },
     };
 
-    const imageVariants = {
+    const imageVariants: Variants = {
         hidden: { opacity: 0, scale: 0.9, y: 20 },
         visible: {
             opacity: 1,
