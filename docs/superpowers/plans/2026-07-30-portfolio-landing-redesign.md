@@ -8,6 +8,21 @@
 
 **Tech Stack:** Next.js 16.2.7 (App Router), React 19.2.4, TypeScript, Tailwind CSS v4, Base UI (`base-nova` shadcn style), `motion@12` (Framer Motion), `embla-carousel-react@8`, `lucide-react`.
 
+## Execution notes (added at execution time)
+
+- **Task 2 runs BEFORE Task 1.** The `@shadcn-space` install shipped
+  `cta/index.tsx` importing `@/components/ui/dialog` without installing that
+  component, so `npm run build` fails on the base commit before any of our
+  changes. Task 2 deletes `cta/`, which clears it. Running Task 2 first gives
+  every later task a green baseline to verify against. Remaining order is
+  unchanged: 2, 1, 3, 4, 5, 6, 7, 8.
+- **The dev server runs on port 3100**, not 3000. Ports 3000–3004 are occupied
+  by other apps on this machine (3000 is algorithm-playground, 3002 is the live
+  falcon-hub). Always start it as `PORT=3100 npm run dev`.
+- **Work happens in the `~/falcon-hub-redesign` worktree** on branch
+  `redesign/portfolio-landing`. `/var/www/falcon-hub` is the live site — never
+  edit or build there.
+
 ## Global Constraints
 
 - **Read the Next.js 16 docs before writing code.** `node_modules/next/dist/docs/` — this version differs from older Next.js. Per the repo's `AGENTS.md`, this is mandatory, not optional.
@@ -42,9 +57,9 @@ Behaviour-preserving refactor. The page must look and act identically when this 
 - [ ] **Step 1: Capture the current rendered output as a baseline**
 
 ```bash
-npm run dev > /tmp/dev.log 2>&1 &
+PORT=3100 npm run dev > /tmp/dev.log 2>&1 &
 sleep 8
-curl -s http://127.0.0.1:3000 > /tmp/baseline.html
+curl -s http://127.0.0.1:3100 > /tmp/baseline.html
 grep -c "Agendex\|Casefile\|AniCal" /tmp/baseline.html
 ```
 
@@ -141,7 +156,7 @@ Note `useRef` and the `Copy`/`Check`/`Eye`/`EyeOff`/`X` icons are no longer used
 - [ ] **Step 6: Verify the page is byte-identical to the baseline**
 
 ```bash
-curl -s http://127.0.0.1:3000 > /tmp/after.html
+curl -s http://127.0.0.1:3100 > /tmp/after.html
 diff <(grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' /tmp/baseline.html | sort) \
      <(grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' /tmp/after.html | sort)
 ```
@@ -542,15 +557,15 @@ Note there is no `"use client"` here — this is a server component, which is wh
 - [ ] **Step 6: Verify all seven apps still render and the theme toggle works**
 
 ```bash
-npm run dev > /tmp/dev.log 2>&1 &
+PORT=3100 npm run dev > /tmp/dev.log 2>&1 &
 sleep 8
-curl -s http://127.0.0.1:3000 | grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' | sort -u | wc -l
+curl -s http://127.0.0.1:3100 | grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' | sort -u | wc -l
 ```
 
 Expected: `7`.
 
 ```bash
-curl -s http://127.0.0.1:3000 | grep -c "Based in Portugal"
+curl -s http://127.0.0.1:3100 | grep -c "Based in Portugal"
 ```
 
 Expected: `1`.
@@ -660,7 +675,7 @@ Expected: no output.
 - [ ] **Step 5: Verify the hero renders the real copy**
 
 ```bash
-curl -s http://127.0.0.1:3000 | grep -c "Senior Full Stack Developer"
+curl -s http://127.0.0.1:3100 | grep -c "Senior Full Stack Developer"
 ```
 
 Expected: at least `1`.
@@ -1007,9 +1022,9 @@ Add `import type { GitHubStats } from "@/lib/github";` at the top. The existing 
 - [ ] **Step 6: Verify the section renders live data**
 
 ```bash
-npm run dev > /tmp/dev.log 2>&1 &
+PORT=3100 npm run dev > /tmp/dev.log 2>&1 &
 sleep 8
-curl -s http://127.0.0.1:3000 | grep -o "Public repos\|Followers\|Stars earned\|Most used languages"
+curl -s http://127.0.0.1:3100 | grep -o "Public repos\|Followers\|Stars earned\|Most used languages"
 ```
 
 Expected: all four labels present.
@@ -1019,7 +1034,7 @@ Expected: all four labels present.
 Temporarily change `API` in `lib/github.ts` to `https://api.github.invalid`, restart dev, and check the page still returns 200 with placeholders:
 
 ```bash
-curl -s -o /tmp/degraded.html -w "%{http_code}\n" http://127.0.0.1:3000
+curl -s -o /tmp/degraded.html -w "%{http_code}\n" http://127.0.0.1:3100
 grep -c "—" /tmp/degraded.html
 grep -c "Most used languages" /tmp/degraded.html
 ```
@@ -1173,7 +1188,7 @@ The `aria-label`s are additions — the registry's icon-only buttons had no acce
 Embla renders every slide in the DOM regardless of what is visible, so all seven must still be present:
 
 ```bash
-curl -s http://127.0.0.1:3000 | grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' | sort -u | wc -l
+curl -s http://127.0.0.1:3100 | grep -o 'Agendex\|Casefile\|AniCal\|Food Twin\|Falcon Tools\|Algorithm Playground\|Broke But Optimistic' | sort -u | wc -l
 ```
 
 Expected: `7`.
@@ -1188,7 +1203,7 @@ Expected: build succeeds.
 
 - [ ] **Step 6: Manually verify the carousel and modal**
 
-Open `http://127.0.0.1:3000` in a browser. Confirm: prev/next move the carousel, the progress bar tracks, and clicking "Demo" on Broke But Optimistic opens the modal with a working copy button for both credentials.
+Open `http://127.0.0.1:3100` in a browser. Confirm: prev/next move the carousel, the progress bar tracks, and clicking "Demo" on Broke But Optimistic opens the modal with a working copy button for both credentials.
 
 - [ ] **Step 7: Commit**
 
@@ -1425,9 +1440,9 @@ In `index.tsx`, import and render after `Projects`:
 - [ ] **Step 4: Verify the content renders, including the incomplete-degree label**
 
 ```bash
-curl -s http://127.0.0.1:3000 | grep -c "not completed"
-curl -s http://127.0.0.1:3000 | grep -o "9 certificates\|4 certificates"
-curl -s http://127.0.0.1:3000 | grep -c "AureliaJS"
+curl -s http://127.0.0.1:3100 | grep -c "not completed"
+curl -s http://127.0.0.1:3100 | grep -o "9 certificates\|4 certificates"
+curl -s http://127.0.0.1:3100 | grep -c "AureliaJS"
 ```
 
 Expected: `1` for "not completed"; both certificate counts present; non-zero for AureliaJS.
@@ -1569,7 +1584,7 @@ Change nothing else in this file — in particular, leave the pre-paint theme sc
 - [ ] **Step 4: Verify the full section order**
 
 ```bash
-curl -s http://127.0.0.1:3000 > /tmp/final.html
+curl -s http://127.0.0.1:3100 > /tmp/final.html
 for id in github projects about contact; do
   printf "%s: " "$id"
   grep -o "id=\"$id\"" /tmp/final.html | wc -l
@@ -1605,7 +1620,7 @@ Expected: build succeeds with no type errors and no unused-import warnings.
 
 - [ ] **Step 7: Full manual verification**
 
-Open `http://127.0.0.1:3000` and confirm every item:
+Open `http://127.0.0.1:3100` and confirm every item:
 
 1. All six sections render in order: Hero, GitHub, Projects, About, Contact, Footer.
 2. Theme toggle flips light/dark; reload preserves the choice with no flash of the wrong theme.
