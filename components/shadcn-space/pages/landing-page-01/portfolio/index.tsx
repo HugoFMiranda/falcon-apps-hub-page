@@ -1,10 +1,18 @@
 "use client";
 
+import * as React from "react";
 import { useEffect, useState } from "react";
 import { motion, type Variants } from "motion/react";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APPS, type EnvLink } from "@/lib/apps";
 import AppMockup from "@/components/app-mockup";
@@ -27,6 +35,8 @@ const STAGGER_ANIMATION_VARIANTS: Variants = {
 const Projects = () => {
   const [isDark, setIsDark] = useState(false);
   const [demoModal, setDemoModal] = useState<{ env: EnvLink; appName: string } | null>(null);
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [progress, setProgress] = React.useState(0);
 
   useEffect(() => {
     const sync = () => setIsDark(document.documentElement.classList.contains("dark"));
@@ -35,6 +45,23 @@ const Projects = () => {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
+
+  React.useEffect(() => {
+    if (!api) return;
+    const updateProgress = () => {
+      const scrollProgress = api.scrollProgress();
+      setProgress(Math.max(0, Math.min(1, scrollProgress)) * 100);
+    };
+    updateProgress();
+    api.on("scroll", updateProgress);
+    api.on("reInit", updateProgress);
+    api.on("select", updateProgress);
+    return () => {
+      api.off("scroll", updateProgress);
+      api.off("reInit", updateProgress);
+      api.off("select", updateProgress);
+    };
+  }, [api]);
 
   return (
     <section id="projects">
@@ -64,15 +91,64 @@ const Projects = () => {
       <div className="border-y border-border">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
           <div className="border-x border-border p-5 md:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {APPS.map((app) => (
-                <AppCard
-                  key={app.id}
-                  app={app}
-                  isDark={isDark}
-                  onOpenDemo={(env) => setDemoModal({ env, appName: app.name })}
-                />
-              ))}
+            <Carousel setApi={setApi} opts={{ align: "start", loop: false, slidesToScroll: 1 }}>
+              <CarouselContent className="-ml-6">
+                {APPS.map((app, index) => (
+                  <CarouselItem key={app.id} className="pl-6 basis-full md:basis-1/2 lg:basis-1/3">
+                    <motion.div
+                      variants={FADE_UP_ANIMATION_VARIANTS}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="h-full"
+                    >
+                      <AppCard
+                        app={app}
+                        isDark={isDark}
+                        onOpenDemo={(env) => setDemoModal({ env, appName: app.name })}
+                      />
+                    </motion.div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
+        <div className="border-x border-border p-5 md:p-8 lg:p-12 overflow-hidden">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Previous project"
+                className="rounded-full w-10 h-10 border-border hover:bg-muted/50 transition-colors hover:cursor-pointer"
+                onClick={() => api?.scrollPrev()}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <span className="text-sm font-normal text-foreground hidden sm:inline">Previous</span>
+            </div>
+            <div className="flex-1 max-w-24 sm:max-w-52 h-0.5 bg-border relative rounded-full">
+              <div
+                className="absolute left-0 bg-foreground h-1 top-1/2 -translate-y-1/2 rounded-full"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span className="text-sm font-normal text-foreground hidden sm:inline">Next</span>
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Next project"
+                className="rounded-full w-10 h-10 border-border hover:bg-muted/50 transition-colors hover:cursor-pointer"
+                onClick={() => api?.scrollNext()}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
