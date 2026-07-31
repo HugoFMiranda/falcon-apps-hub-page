@@ -18,7 +18,7 @@ export default function AppMockup({ app, isDark }: { app: AppDef; isDark: boolea
           src={src}
           alt={`${app.name} running on a phone`}
           fill
-          sizes="320px"
+          sizes="(min-width: 1280px) 320px, (min-width: 1024px) 256px, 100vw"
           className="object-contain object-center"
         />
       </div>
@@ -42,7 +42,7 @@ export default function AppMockup({ app, isDark }: { app: AppDef; isDark: boolea
           src={src}
           alt={`Screenshot of ${app.name}`}
           fill
-          sizes="320px"
+          sizes="(min-width: 1280px) 320px, (min-width: 1024px) 256px, 100vw"
           className="scale-[1.4] object-cover object-top"
         />
       </div>
