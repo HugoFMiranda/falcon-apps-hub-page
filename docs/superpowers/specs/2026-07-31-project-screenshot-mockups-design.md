@@ -30,16 +30,24 @@ four serve a marketing page rather than the product:
 | Algorithm Playground | Algorithm catalog list | Navigate into a visualizer page |
 | Falcon Tools | Four tool cards on a mostly empty page | Navigate into PDF Page Operations |
 | Food Twin | Marketing hero + feature cards | Click through to search, enter a query |
-| Broke But Optimistic | Marketing hero | Log in with the published demo credentials |
+| Broke But Optimistic | Marketing hero | Marketing hero (see below) |
 | Agendex | Marketing hero + cookie banner | Marketing hero, cookie banner dismissed |
 | Yomu | n/a (Android) | Frame extracted from the repo's `screens.gif` |
 
 Capturing every root URL blind would produce four screenshots of marketing copy. Each app therefore
 needs its own capture recipe.
 
-Agendex is the one app whose product UI is unreachable: it is behind a login and no demo account
-exists. Its marketing hero embeds a realistic appointment-list card, which is the strongest
-available frame, so the recipe dismisses the cookie banner and captures the hero.
+Two apps have unreachable product UI, and both fall back to their marketing hero.
+
+Agendex is behind a login with no demo account. Its hero embeds a realistic appointment-list card,
+which is the strongest available frame, so the recipe dismisses the cookie banner and captures it.
+
+Broke But Optimistic was expected to be capturable with the demo credentials published in
+`lib/apps.ts`. It is not: signing in at `bbo.hugofmiranda.com` with `demo@bbo.test` fails with
+"Unable to sign in with that email and password." The cause is in that app's own repo, at
+`/var/www/bbo-demo/apps/web/lib/auth.ts:200`, where the demo-user auto-provision branch is gated
+behind `process.env.NODE_ENV !== "production"` and so never runs on the deployed site. Fixing it is
+out of scope here. BBO gets its marketing hero, in both themes since the site has a working toggle.
 
 ## Design
 
@@ -68,8 +76,8 @@ Theme selection per app is whatever that app supports: an in-app theme toggle wh
 otherwise `colorScheme` on the browser context. An app with no dark variant emits one file and the
 component falls back to it for both themes.
 
-BBO's login uses the demo credentials already published in `lib/apps.ts`
-(`demo@bbo.test`), so the script exposes nothing new.
+No recipe needs a credential. The one login that was planned turned out to be unusable, so the
+script authenticates nowhere and stores no secrets.
 
 ### 2. Yomu
 
