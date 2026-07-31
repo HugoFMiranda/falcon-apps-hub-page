@@ -30,24 +30,35 @@ four serve a marketing page rather than the product:
 | Algorithm Playground | Algorithm catalog list | Navigate into a visualizer page |
 | Falcon Tools | Four tool cards on a mostly empty page | Navigate into PDF Page Operations |
 | Food Twin | Marketing hero + feature cards | Click through to search, enter a query |
-| Broke But Optimistic | Marketing hero | Marketing hero (see below) |
+| Broke But Optimistic | Marketing hero | Sign in, capture the dashboard (see below) |
 | Agendex | Marketing hero + cookie banner | Marketing hero, cookie banner dismissed |
 | Yomu | n/a (Android) | Frame extracted from the repo's `screens.gif` |
 
 Capturing every root URL blind would produce four screenshots of marketing copy. Each app therefore
 needs its own capture recipe.
 
-Two apps have unreachable product UI, and both fall back to their marketing hero.
+One app has unreachable product UI and falls back to its marketing hero.
 
 Agendex is behind a login with no demo account. Its hero embeds a realistic appointment-list card,
 which is the strongest available frame, so the recipe dismisses the cookie banner and captures it.
 
 Broke But Optimistic was expected to be capturable with the demo credentials published in
-`lib/apps.ts`. It is not: signing in at `bbo.hugofmiranda.com` with `demo@bbo.test` fails with
-"Unable to sign in with that email and password." The cause is in that app's own repo, at
-`/var/www/bbo-demo/apps/web/lib/auth.ts:200`, where the demo-user auto-provision branch is gated
-behind `process.env.NODE_ENV !== "production"` and so never runs on the deployed site. Fixing it is
-out of scope here. BBO gets its marketing hero, in both themes since the site has a working toggle.
+`lib/apps.ts`, and initially was not: signing in at `bbo.hugofmiranda.com` with `demo@bbo.test`
+failed with "Unable to sign in with that email and password."
+
+**Resolved on 2026-07-31.** The first diagnosis, that the demo-user auto-provision branch in that
+app was gated behind a non-production `NODE_ENV`, was wrong: the demo user already existed with a
+valid password hash. The real cause was one level up, in `assertLoginRateLimit`, which throws
+outright when `REDIS_URL` is unset while `NODE_ENV` is production instead of falling back to the
+in-memory limiter its own startup warning advertises. That threw before any password check, so
+every credentials login on the deployed site failed, for every account, not just the demo one.
+Setting `REDIS_URL` on the demo host fixed it. A second, separate fault then surfaced: the demo
+database was missing `AccountMembership` and `AccountInvitation`, so `/app` returned a server-side
+exception; an additive `prisma db push` fixed that.
+
+BBO therefore captures its real dashboard, signed in. It is the one recipe that authenticates. The
+app persists each user's theme preference server-side, so the demo account renders its own dark UI
+regardless of the requested colour scheme, and a single capture serves both site themes.
 
 ## Design
 
@@ -76,8 +87,9 @@ Theme selection per app is whatever that app supports: an in-app theme toggle wh
 otherwise `colorScheme` on the browser context. An app with no dark variant emits one file and the
 component falls back to it for both themes.
 
-No recipe needs a credential. The one login that was planned turned out to be unusable, so the
-script authenticates nowhere and stores no secrets.
+One recipe authenticates: Broke But Optimistic, using the demo credentials that `lib/apps.ts`
+already publishes to visitors through the demo modal. The script stores nothing that is not public
+already.
 
 ### 2. Yomu
 

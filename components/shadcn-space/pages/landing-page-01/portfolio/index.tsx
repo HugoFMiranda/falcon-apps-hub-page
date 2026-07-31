@@ -108,7 +108,7 @@ function ProjectRow({
         style={{ background: isDark ? app.colors.bgDark : app.colors.bgLight }}
       >
         <div className="h-full w-full transition-transform duration-300 ease-out group-hover:scale-105">
-          <AppMockup id={app.id} accent={app.colors.accent} />
+          <AppMockup app={app} isDark={isDark} />
         </div>
       </div>
 
