@@ -9,6 +9,9 @@ import path from "node:path";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "mockups");
 
+/** Published in lib/apps.ts and handed to visitors by the demo modal. Not a secret. */
+const DEMO_LOGIN = { email: "demo@bbo.test", password: "DemoPass123!" };
+
 /**
  * One recipe per app id in lib/apps.ts, in the same order as APPS so the two
  * lists can be diffed by eye.
@@ -36,24 +39,33 @@ const RECIPES = [
     clip: { x: 733, y: 305, width: 399, height: 305 },
   },
   {
-    // Same situation as Agendex: see the "Known blocker" section of the plan.
+    // The only recipe that signs in. The credentials are the demo account this
+    // site already publishes to visitors through the portfolio's demo modal, so
+    // the script stores nothing that is not public already.
     id: "broke-but-optimistic",
-    url: "https://unbroke-finances.vercel.app/",
-    // At 1280 the hero stretches into a 2:1 letterbox that the tile has to crop
-    // through the headline. At 1024 the same hero is a 1.5:1 block, which is the
-    // shape the tile actually wants, so nothing gets sliced.
-    viewport: { width: 1024, height: 800 },
-    themes: ["dark", "light"],
-    prepare: async (page, theme) => {
-      // The site loads dark. Its toggle button's accessible name is the action
-      // ("Switch to light mode"), not the visible text ("Dark mode enabled").
-      if (theme === "light") {
-        await page.getByRole("button", { name: /light mode/i }).click({ timeout: 5000 });
-        await page.waitForTimeout(800);
-      }
+    url: "https://bbo.hugofmiranda.com/auth?callbackUrl=/app",
+    viewport: { width: 1280, height: 800 },
+    // The app persists each user's theme choice server-side, so the demo account
+    // renders its own dark UI whichever colour scheme the browser asks for. One
+    // capture therefore serves both site themes, as it does for the other apps.
+    themes: ["light"],
+    prepare: async (page) => {
+      await page.locator("input[type=email]").fill(DEMO_LOGIN.email);
+      await page.locator("input[type=password]").fill(DEMO_LOGIN.password);
+      await page.getByRole("button", { name: /sign in with email/i }).click();
+      await page.waitForURL("**/app", { timeout: 30000 });
+      await page.waitForLoadState("networkidle");
+      // Balances are fetched after the shell paints, so wait for a real figure
+      // rather than a fixed delay, otherwise the crop catches empty cards.
+      await page.getByText("Total balance", { exact: false }).first().waitFor({ timeout: 20000 });
+      await page.waitForTimeout(1200);
     },
-    // The hero card exactly: headline, both buttons, and the "Feels familiar?" panel.
-    clip: { x: 36, y: 140, width: 952, height: 630 },
+    // The greeting and the balances overview stacked, which lands at 1.17:1,
+    // almost exactly the tile's own aspect. Taking the full width instead
+    // letterboxes it at 5:1 and the account cards become unreadable slivers.
+    // Width stops at 585 because the third account card starts at x 648 and any
+    // wider crop slices through its title.
+    clip: { x: 60, y: 130, width: 585, height: 500 },
   },
   {
     id: "falcon-tools",

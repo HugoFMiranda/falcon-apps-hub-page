@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import type { AppDef } from "@/lib/apps";
 
 /** Apps with a captured dark screenshot. Everything else reuses its light one. */
-const DARK_CAPTURES = new Set(["broke-but-optimistic", "yomu"]);
+const DARK_CAPTURES = new Set(["yomu"]);
 
 /** Yomu's frames come out of an Android screenshot, so they carry their own device frame. */
 const SELF_FRAMED = new Set(["yomu"]);
