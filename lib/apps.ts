@@ -25,8 +25,8 @@ export const APPS: AppDef[] = [
   {
     id: "agendex",
     name: "Agendex",
-    url: "agendex.falcon-apps.duckdns.org",
-    href: "https://agendex.falcon-apps.duckdns.org",
+    url: "agendex.hugofmiranda.com",
+    href: "https://agendex.hugofmiranda.com",
     hosted: true,
     description:
       "Appointment scheduling and clinic management SaaS. Multi-tenant, multi-location, with public booking pages and a live appointment queue.",
@@ -59,8 +59,8 @@ export const APPS: AppDef[] = [
       },
       {
         label: "Demo",
-        href: "https://bbo.falcon-apps.duckdns.org",
-        url: "bbo.falcon-apps.duckdns.org",
+        href: "https://bbo.hugofmiranda.com",
+        url: "bbo.hugofmiranda.com",
         demo: { email: "demo@bbo.test", password: "DemoPass123!" },
       },
     ],
@@ -68,8 +68,8 @@ export const APPS: AppDef[] = [
   {
     id: "falcon-tools",
     name: "Falcon Tools",
-    url: "tools.falcon-apps.duckdns.org",
-    href: "https://tools.falcon-apps.duckdns.org",
+    url: "tools.hugofmiranda.com",
+    href: "https://tools.hugofmiranda.com",
     hosted: true,
     description:
       "Browser-based PDF utility suite. Reorder, merge, and compress PDFs. No data leaves your browser.",
@@ -84,8 +84,8 @@ export const APPS: AppDef[] = [
   {
     id: "algorithm-playground",
     name: "Algorithm Playground",
-    url: "playground.falcon-apps.duckdns.org",
-    href: "https://playground.falcon-apps.duckdns.org",
+    url: "playground.hugofmiranda.com",
+    href: "https://playground.hugofmiranda.com",
     hosted: true,
     description:
       "Interactive visualizer with step-by-step playback for sorting, graph traversal, and pathfinding algorithms.",
@@ -100,8 +100,8 @@ export const APPS: AppDef[] = [
   {
     id: "food-twin",
     name: "Food Twin",
-    url: "food.falcon-apps.duckdns.org",
-    href: "https://food.falcon-apps.duckdns.org",
+    url: "food.hugofmiranda.com",
+    href: "https://food.hugofmiranda.com",
     hosted: true,
     description:
       "Find foods with identical nutritional profiles to swap ingredients without changing your macro targets.",
@@ -116,8 +116,8 @@ export const APPS: AppDef[] = [
   {
     id: "casefile",
     name: "Casefile",
-    url: "casefile.falcon-apps.duckdns.org",
-    href: "https://casefile.falcon-apps.duckdns.org",
+    url: "casefile.hugofmiranda.com",
+    href: "https://casefile.hugofmiranda.com",
     hosted: true,
     description:
       "A daily mystery puzzle game. Read the clues, place eight suspects on a manor floor plan, and identify the killer. A new case every day.",
@@ -130,9 +130,9 @@ export const APPS: AppDef[] = [
   },
   {
     id: "anime-calendar",
-    name: "AniCal",
-    url: "anime-calendar.falcon-apps.duckdns.org",
-    href: "https://anime-calendar.falcon-apps.duckdns.org",
+    name: "AniCal - anime calendar",
+    url: "anime-calendar.net",
+    href: "https://anime-calendar.net",
     hosted: true,
     description:
       "Track your seasonal anime lineup with a weekly calendar view. See airing schedules, mark episodes watched, and never lose track of the current season.",
@@ -142,6 +142,18 @@ export const APPS: AppDef[] = [
       bgDark: "linear-gradient(135deg, #2e1065 0%, #4a044e 100%)",
       accent: "#a855f7",
     },
+    environments: [
+      {
+        label: "Live",
+        href: "https://anime-calendar.net",
+        url: "anime-calendar.net",
+      },
+      {
+        label: "Demo",
+        href: "https://anime-calendar.hugofmiranda.com",
+        url: "anime-calendar.hugofmiranda.com",
+      },
+    ],
   },
   {
     id: "yomu",

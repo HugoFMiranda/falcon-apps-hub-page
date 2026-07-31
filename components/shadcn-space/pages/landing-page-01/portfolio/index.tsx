@@ -138,7 +138,7 @@ function ProjectRow({
                     onClick={() => onOpenDemo(env)}
                     className={cn(
                       buttonVariants({ size: "sm", variant: "outline" }),
-                      "rounded-full"
+                      "rounded-full cursor-pointer"
                     )}
                   >
                     {env.label} →
