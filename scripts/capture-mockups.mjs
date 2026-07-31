@@ -11,6 +11,7 @@ const OUT_DIR = path.join(ROOT, "public", "mockups");
 /**
  * One recipe per app id in lib/apps.ts.
  * `prepare` runs after navigation, before the screenshot. `clip` is in CSS pixels.
+ * `quality` overrides the default webp quality of 90 for captures that compress badly.
  */
 const RECIPES = [
   {
@@ -18,12 +19,23 @@ const RECIPES = [
     url: "https://casefile.hugofmiranda.com",
     viewport: { width: 1280, height: 800 },
     themes: ["light"],
+    // Illustrated, full-bleed and noisy, so it costs about twice what the other
+    // captures do at the default quality: 224 KB at 90, and still 159 KB at 80.
+    // 72 brings it under the 150 KB budget, and the tile paints it at 288px wide
+    // where the difference is not visible.
+    quality: 72,
   },
   {
     id: "anime-calendar",
     url: "https://anime-calendar.net/today",
     viewport: { width: 1280, height: 800 },
     themes: ["light"],
+    // Two card columns and three complete rows, cut on the gutter after column
+    // two. The full viewport left a dead white band under the grid and shrank the
+    // poster art past the point of being readable at 288px. Kept narrower than
+    // the tile's narrowest aspect (4:3) so object-cover only ever trims the
+    // bottom, never the sides: a half-row reads as a list, a half-word does not.
+    clip: { x: 0, y: 0, width: 640, height: 512 },
   },
   {
     // Product is behind a login with no working demo account, so the marketing
@@ -42,7 +54,10 @@ const RECIPES = [
     // Same situation as Agendex: see the "Known blocker" section of the plan.
     id: "broke-but-optimistic",
     url: "https://unbroke-finances.vercel.app/",
-    viewport: { width: 1280, height: 800 },
+    // At 1280 the hero stretches into a 2:1 letterbox that the tile has to crop
+    // through the headline. At 1024 the same hero is a 1.5:1 block, which is the
+    // shape the tile actually wants, so nothing gets sliced.
+    viewport: { width: 1024, height: 800 },
     themes: ["dark", "light"],
     prepare: async (page, theme) => {
       // The site loads dark. Its toggle button's accessible name is the action
@@ -52,7 +67,8 @@ const RECIPES = [
         await page.waitForTimeout(800);
       }
     },
-    clip: { x: 40, y: 140, width: 1200, height: 580 },
+    // The hero card exactly: headline, both buttons, and the "Feels familiar?" panel.
+    clip: { x: 36, y: 140, width: 952, height: 630 },
   },
   {
     id: "algorithm-playground",
@@ -64,7 +80,18 @@ const RECIPES = [
     prepare: async (page) => {
       // Run the visualizer so the grid shows an in-progress search, not a blank board.
       await page.getByRole("button", { name: "Play" }).click({ timeout: 8000 });
-      await page.waitForTimeout(1200);
+      // Playback steps one node at a time and starts from an all-"g=inf" board.
+      // A fixed short wait leaves the grid nearly colorless, so wait until enough
+      // cells carry a real score. Soft failure: a half-explored grid still beats
+      // aborting the capture, but say so, because the tile will be washed out.
+      await page
+        .waitForFunction(() => (document.body.innerText.match(/g=\d/g) || []).length >= 24, null, {
+          timeout: 60000,
+        })
+        .catch((error) => {
+          console.warn("  warn algorithm-playground: grid never filled in, tile will look pale");
+          console.warn(`       ${error.message.split("\n")[0]}`);
+        });
     },
     // Tight crop on the stats row + colored grid; skips the page header and the
     // Parameters sidebar, which are static text with no visual density.
@@ -90,14 +117,47 @@ const RECIPES = [
     themes: ["light"],
     prepare: async (page) => {
       // Every tool page is an empty state until a file is loaded, so make one.
+      // The sample has to carry color and layout: blank pages reading "Page 1"
+      // turn the thumbnail grid into white cards on a white panel, which tells a
+      // portfolio visitor nothing about what the tool does.
+      const accents = ["#2563eb", "#0d9488", "#db2777", "#ea580c", "#7c3aed", "#0891b2"];
       const scratch = await page.context().newPage();
       await scratch.setContent(
-        Array.from({ length: 6 }, (_, i) =>
-          `<section style="page-break-after:always;font:600 64px system-ui;` +
-          `display:grid;place-items:center;height:96vh">Page ${i + 1}</section>`
-        ).join("")
+        `<style>
+          *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+          body{margin:0;font-family:system-ui,sans-serif;color:#0f172a}
+          .p{page-break-after:always;height:96vh;padding:52px 60px;display:flex;
+             flex-direction:column;gap:26px}
+          .band{height:16px;border-radius:8px}
+          h1{font-size:44px;line-height:1.04;margin:0;letter-spacing:-0.02em}
+          .sub{font-size:19px;color:#64748b;margin:0}
+          .line{height:13px;border-radius:7px;background:#e2e8f0;margin-bottom:15px}
+          .chart{display:flex;align-items:flex-end;gap:20px;height:240px;margin-top:auto}
+          .chart span{flex:1;border-radius:9px 9px 0 0}
+        </style>` +
+        accents
+          .map((accent, i) => {
+            const bars = [58, 86, 42, 97, 71, 34]
+              .map((h, j) => {
+                const pct = ((h + i * 9) % 70) + 30;
+                return `<span style="height:${pct}%;background:${accent};opacity:${0.35 + j * 0.13}"></span>`;
+              })
+              .join("");
+            const lines = Array.from(
+              { length: 5 },
+              (_, j) => `<div class="line" style="width:${[100, 92, 97, 78, 88][j]}%"></div>`
+            ).join("");
+            return `<section class="p">
+              <div class="band" style="background:${accent}"></div>
+              <h1>Quarterly Report</h1>
+              <p class="sub">Section ${i + 1} of ${accents.length}</p>
+              <div>${lines}</div>
+              <div class="chart">${bars}</div>
+            </section>`;
+          })
+          .join("")
       );
-      const pdf = await scratch.pdf({ format: "A4" });
+      const pdf = await scratch.pdf({ format: "A4", printBackground: true });
       await scratch.close();
 
       await page.locator('input[type="file"]').setInputFiles({
@@ -133,7 +193,12 @@ async function capture(browser, recipe, theme) {
     // Let fonts settle and any entrance animation finish.
     await page.waitForTimeout(1200);
     const file = path.join(OUT_DIR, `${recipe.id}-${theme}.webp`);
-    await page.screenshot({ path: file, type: "webp", quality: 90, clip: recipe.clip });
+    await page.screenshot({
+      path: file,
+      type: "webp",
+      quality: recipe.quality ?? 90,
+      clip: recipe.clip,
+    });
     console.log(`  ok   ${recipe.id}-${theme}.webp`);
   } finally {
     await context.close();

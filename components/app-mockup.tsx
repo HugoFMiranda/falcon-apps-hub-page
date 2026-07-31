@@ -36,14 +36,15 @@ export default function AppMockup({ app, isDark }: { app: AppDef; isDark: boolea
           {app.url}
         </span>
       </div>
-      {/* Screenshot, scaled up so it reads as a crop of real UI rather than a shrunken page */}
+      {/* Screenshot at 1:1. Each capture's own clip does the framing, so an extra
+          zoom here would only slice through content that was deliberately included. */}
       <div className="relative h-[calc(100%-1.25rem)] w-full overflow-hidden">
         <Image
           src={src}
           alt={`Screenshot of ${app.name}`}
           fill
           sizes="(min-width: 1280px) 320px, (min-width: 1024px) 256px, 100vw"
-          className="scale-[1.4] object-cover object-top"
+          className="object-cover object-top"
         />
       </div>
     </div>
