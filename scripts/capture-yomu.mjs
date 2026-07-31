@@ -18,6 +18,17 @@
 //                       at tile size the pair reads as "the app, in both themes."
 //
 // Manual: `npm run mockups:yomu`.
+//
+// If the gif ever changes, re-measure the frame numbers and crop boxes from a
+// contact sheet of every frame in reading order, left to right, top to bottom:
+//
+//   cd /tmp && curl -fsL -o screens.gif \
+//     "https://raw.githubusercontent.com/HugoFMiranda/yomu/master/.github/readme-images/screens.gif"
+//   ffmpeg -hide_banner -loglevel error -i screens.gif \
+//     -vf "scale=200:-1,tile=8x8" -frames:v 1 sheet.png
+//
+// Frame numbers are zero-indexed. `ffprobe -show_entries stream=width,height
+// screens.gif` gives the montage size the crop boxes below are measured against.
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -47,7 +58,9 @@ const gif = path.join(work, "screens.gif");
 
 try {
   mkdirSync(OUT_DIR, { recursive: true });
-  execFileSync("curl", ["-sL", "-o", gif, GIF_URL]);
+  // -f so an HTTP error is a curl failure here, not an error page written to the
+  // gif path that surfaces later as an opaque ffmpeg decode error.
+  execFileSync("curl", ["-fsL", "-o", gif, GIF_URL]);
 
   for (const { theme, frame, crop } of CAPTURES) {
     const out = path.join(OUT_DIR, `yomu-${theme}.webp`);

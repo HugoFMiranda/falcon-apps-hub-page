@@ -1,5 +1,6 @@
 // Captures a real screenshot of each project for the portfolio mockup tiles.
 // Manual: `npm run mockups`, or `npm run mockups -- --only casefile,food-twin`.
+// Yomu is not here: it is an Android app, captured by `npm run mockups:yomu`.
 import { chromium } from "playwright";
 import { readFile, mkdir, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -9,34 +10,12 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "mockups");
 
 /**
- * One recipe per app id in lib/apps.ts.
+ * One recipe per app id in lib/apps.ts, in the same order as APPS so the two
+ * lists can be diffed by eye.
  * `prepare` runs after navigation, before the screenshot. `clip` is in CSS pixels.
  * `quality` overrides the default webp quality of 90 for captures that compress badly.
  */
 const RECIPES = [
-  {
-    id: "casefile",
-    url: "https://casefile.hugofmiranda.com",
-    viewport: { width: 1280, height: 800 },
-    themes: ["light"],
-    // Illustrated, full-bleed and noisy, so it costs about twice what the other
-    // captures do at the default quality: 224 KB at 90, and still 159 KB at 80.
-    // 72 brings it under the 150 KB budget, and the tile paints it at 288px wide
-    // where the difference is not visible.
-    quality: 72,
-  },
-  {
-    id: "anime-calendar",
-    url: "https://anime-calendar.net/today",
-    viewport: { width: 1280, height: 800 },
-    themes: ["light"],
-    // Two card columns and three complete rows, cut on the gutter after column
-    // two. The full viewport left a dead white band under the grid and shrank the
-    // poster art past the point of being readable at 288px. Kept narrower than
-    // the tile's narrowest aspect (4:3) so object-cover only ever trims the
-    // bottom, never the sides: a half-row reads as a list, a half-word does not.
-    clip: { x: 0, y: 0, width: 640, height: 512 },
-  },
   {
     // Product is behind a login with no working demo account, so the marketing
     // hero (which embeds a realistic appointment list) is the best available frame.
@@ -48,7 +27,13 @@ const RECIPES = [
       await page.getByRole("button", { name: "Aceitar" }).click({ timeout: 5000 });
       await page.waitForTimeout(600);
     },
-    clip: { x: 640, y: 200, width: 560, height: 420 },
+    // The hero's embedded card is itself drawn as a mock window, with its own
+    // traffic lights and a "Today" title bar. The tile already puts real window
+    // chrome around every screenshot, so the crop starts just below that title
+    // bar: two rows of dots 30px apart looks like a mistake. What is left is the
+    // appointment list edge to edge, from the first row down to the footer, with
+    // the pale empty page margin above the card trimmed off as well.
+    clip: { x: 733, y: 305, width: 399, height: 305 },
   },
   {
     // Same situation as Agendex: see the "Known blocker" section of the plan.
@@ -69,46 +54,6 @@ const RECIPES = [
     },
     // The hero card exactly: headline, both buttons, and the "Feels familiar?" panel.
     clip: { x: 36, y: 140, width: 952, height: 630 },
-  },
-  {
-    id: "algorithm-playground",
-    url: "https://playground.hugofmiranda.com/algorithms/a-star",
-    // Taller than the brief's estimate so the full 6-row grid clears the fold;
-    // the original 1000px viewport cut the grid off after 2 rows.
-    viewport: { width: 1280, height: 1300 },
-    themes: ["light"],
-    prepare: async (page) => {
-      // Run the visualizer so the grid shows an in-progress search, not a blank board.
-      await page.getByRole("button", { name: "Play" }).click({ timeout: 8000 });
-      // Playback steps one node at a time and starts from an all-"g=inf" board.
-      // A fixed short wait leaves the grid nearly colorless, so wait until enough
-      // cells carry a real score. Soft failure: a half-explored grid still beats
-      // aborting the capture, but say so, because the tile will be washed out.
-      await page
-        .waitForFunction(() => (document.body.innerText.match(/g=\d/g) || []).length >= 24, null, {
-          timeout: 60000,
-        })
-        .catch((error) => {
-          console.warn("  warn algorithm-playground: grid never filled in, tile will look pale");
-          console.warn(`       ${error.message.split("\n")[0]}`);
-        });
-    },
-    // Tight crop on the stats row + colored grid; skips the page header and the
-    // Parameters sidebar, which are static text with no visual density.
-    clip: { x: 32, y: 560, width: 816, height: 670 },
-  },
-  {
-    id: "food-twin",
-    url: "https://food.hugofmiranda.com/search",
-    viewport: { width: 1280, height: 900 },
-    themes: ["light"],
-    prepare: async (page) => {
-      await page.getByPlaceholder("Enter a food name...").fill("chicken breast");
-      await page.keyboard.press("Enter");
-      // Results are fetched, so wait for the match badge rather than a fixed delay.
-      await page.getByText(/% match/).first().waitFor({ timeout: 20000 });
-    },
-    clip: { x: 180, y: 90, width: 920, height: 700 },
   },
   {
     id: "falcon-tools",
@@ -170,14 +115,96 @@ const RECIPES = [
       await page.waitForTimeout(1500); // thumbnail rendering
     },
     // Tight on the Sequence panel's thumbnail grid; the brief's estimate leaned
-    // left into the mostly-empty Files panel instead.
-    clip: { x: 455, y: 205, width: 770, height: 460 },
+    // left into the mostly-empty Files panel instead. x sits about 15px clear of
+    // the first card's left edge: any further right and card 1 loses its border
+    // while cards 2 to 4 keep theirs, which reads as a rendering bug.
+    clip: { x: 440, y: 205, width: 785, height: 460 },
+  },
+  {
+    id: "algorithm-playground",
+    url: "https://playground.hugofmiranda.com/algorithms/a-star",
+    // Taller than the brief's estimate so the full 6-row grid clears the fold;
+    // the original 1000px viewport cut the grid off after 2 rows.
+    viewport: { width: 1280, height: 1300 },
+    themes: ["light"],
+    prepare: async (page) => {
+      // Run the visualizer so the grid shows an in-progress search, not a blank board.
+      await page.getByRole("button", { name: "Play" }).click({ timeout: 8000 });
+      // Playback steps one node at a time and starts from an all-"g=inf" board.
+      // A fixed short wait leaves the grid nearly colorless, so wait until enough
+      // cells carry a real score. Soft failure: a half-explored grid still beats
+      // aborting the capture, but say so, because the tile will be washed out.
+      await page
+        .waitForFunction(() => (document.body.innerText.match(/g=\d/g) || []).length >= 24, null, {
+          timeout: 60000,
+        })
+        .catch((error) => {
+          console.warn("  warn algorithm-playground: grid never filled in, tile will look pale");
+          console.warn(`       ${error.message.split("\n")[0]}`);
+        });
+    },
+    // Tight crop on the stats row + colored grid; skips the page header and the
+    // Parameters sidebar, which are static text with no visual density.
+    clip: { x: 32, y: 560, width: 816, height: 670 },
+  },
+  {
+    id: "food-twin",
+    url: "https://food.hugofmiranda.com/search",
+    viewport: { width: 1280, height: 900 },
+    themes: ["light"],
+    prepare: async (page) => {
+      await page.getByPlaceholder("Enter a food name...").fill("chicken breast");
+      await page.keyboard.press("Enter");
+      // Results are fetched, so wait for the match badge rather than a fixed delay.
+      await page.getByText(/% match/).first().waitFor({ timeout: 20000 });
+    },
+    // The results column is centered in the viewport, so x and width drop the two
+    // empty gutters and nothing else. y starts just above the page heading, below
+    // the site header. The height is the part that matters: 700px is the searched
+    // food's macro card plus the first ranked match underneath it, and that pair
+    // is the whole product. Stopping short shows only the food you typed in, which
+    // looks like a nutrition lookup rather than a comparison tool.
+    clip: { x: 180, y: 90, width: 920, height: 700 },
+  },
+  {
+    id: "casefile",
+    url: "https://casefile.hugofmiranda.com",
+    viewport: { width: 1280, height: 800 },
+    themes: ["light"],
+    // Illustrated, full-bleed and noisy, so it costs about twice what the other
+    // captures do at the default quality: 224 KB at 90, and still 159 KB at 80.
+    // 72 brings it under the 150 KB budget, and the tile paints it at 288px wide
+    // where the difference is not visible.
+    quality: 72,
+  },
+  {
+    id: "anime-calendar",
+    url: "https://anime-calendar.net/today",
+    viewport: { width: 1280, height: 800 },
+    themes: ["light"],
+    // Starts below the "Today / <capture date>" header. That header rendered the
+    // date in large type at the very top of the crop, and because the tile pins
+    // the image with object-top it was always visible, so the tile advertised how
+    // old the screenshot was. Below it is the populated card grid, which is the
+    // more interesting content anyway: two columns and four complete rows, cut on
+    // a gutter. Kept narrower than the tile's narrowest aspect (4:3) so
+    // object-cover only ever trims the bottom, never the sides: a half-row reads
+    // as a list, a half-word does not.
+    clip: { x: 0, y: 150, width: 640, height: 512 },
   },
 ];
 
 async function appIdsFromSource() {
   const src = await readFile(path.join(ROOT, "lib", "apps.ts"), "utf8");
   return [...src.matchAll(/^\s{4}id: "([^"]+)",$/gm)].map((m) => m[1]);
+}
+
+/** The ids the tile component will actually ask for a `-dark.webp` file for. */
+async function darkCaptureIdsFromSource() {
+  const src = await readFile(path.join(ROOT, "components", "app-mockup.tsx"), "utf8");
+  const block = src.match(/const DARK_CAPTURES = new Set\(\[([^\]]*)\]\)/);
+  if (!block) throw new Error("could not find DARK_CAPTURES in components/app-mockup.tsx");
+  return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }
 
 async function capture(browser, recipe, theme) {
@@ -205,12 +232,34 @@ async function capture(browser, recipe, theme) {
   }
 }
 
-const onlyArg = process.argv.find((a) => a.startsWith("--only"));
-const only = onlyArg
-  ? (onlyArg.includes("=") ? onlyArg.split("=")[1] : process.argv[process.argv.indexOf(onlyArg) + 1])
-      .split(",")
-      .map((s) => s.trim())
-  : null;
+const RECIPE_IDS = RECIPES.map((r) => r.id);
+const USAGE = "usage: npm run mockups -- --only casefile,food-twin";
+
+function parseOnly(argv) {
+  const index = argv.findIndex((a) => a === "--only" || a.startsWith("--only="));
+  if (index === -1) return null;
+  const arg = argv[index];
+  const raw = arg.startsWith("--only=") ? arg.slice("--only=".length) : argv[index + 1];
+  const ids = (raw ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!ids.length) {
+    console.error(`--only needs at least one recipe id.\n${USAGE}`);
+    process.exit(1);
+  }
+  // Without this a typo silently captures nothing, leaves the stale files in
+  // place, finds no failures and exits 0, which reads as "refresh succeeded".
+  const unknown = ids.filter((id) => !RECIPE_IDS.includes(id));
+  if (unknown.length) {
+    console.error(`unknown --only id: ${unknown.join(", ")}`);
+    console.error(`known ids: ${RECIPE_IDS.join(", ")}`);
+    process.exit(1);
+  }
+  return ids;
+}
+
+const only = parseOnly(process.argv);
 
 await mkdir(OUT_DIR, { recursive: true });
 const browser = await chromium.launch();
@@ -231,11 +280,44 @@ for (const recipe of RECIPES) {
 }
 await browser.close();
 
-// Coverage: every app in lib/apps.ts needs at least one captured file.
-const written = await readdir(OUT_DIR).catch(() => []);
-const missing = (await appIdsFromSource()).filter(
-  (id) => !written.some((f) => f.startsWith(`${id}-`))
-);
-if (missing.length) console.error(`\nno mockup for: ${missing.join(", ")}`);
-if (failures.length) console.error(`failed captures: ${failures.join(", ")}`);
-process.exit(failures.length || missing.length ? 1 : 0);
+// Coverage. Filenames are compared exactly, never by prefix: a prefix match would
+// let food-twin-light.webp stand in for a future app id of "food".
+const appIds = await appIdsFromSource();
+const darkIds = await darkCaptureIdsFromSource();
+const written = new Set(await readdir(OUT_DIR).catch(() => []));
+
+// Every app falls back to its light file, and the component only ever reaches for
+// a dark file for the ids it lists. Yomu's two files land here from the other script.
+const expected = new Set(appIds.map((id) => `${id}-light.webp`));
+for (const id of darkIds) expected.add(`${id}-dark.webp`);
+
+const problems = [...expected]
+  .sort()
+  .filter((file) => !written.has(file))
+  .map((file) => `missing ${file}`);
+
+for (const id of darkIds) {
+  if (!appIds.includes(id)) {
+    problems.push(`DARK_CAPTURES lists "${id}", which is not an app id in lib/apps.ts`);
+  }
+}
+// The mirror image of a missing dark file: a dark capture nothing will ever serve.
+for (const recipe of RECIPES) {
+  if (recipe.themes.includes("dark") && !darkIds.includes(recipe.id)) {
+    problems.push(`${recipe.id} captures a dark theme but is not in DARK_CAPTURES, so its dark file is never served`);
+  }
+}
+
+const stale = [...written].filter((f) => f.endsWith(".webp") && !expected.has(f));
+if (stale.length) console.warn(`\nunused files in public/mockups: ${stale.join(", ")}`);
+
+if (problems.length) {
+  console.error("\ncoverage:");
+  for (const problem of problems) console.error(`  ${problem}`);
+  if (problems.some((p) => p.startsWith("missing yomu-"))) {
+    console.error("  Yomu is captured separately: run `npm run mockups:yomu`, or");
+    console.error("  `npm run mockups:all` to refresh everything in one go.");
+  }
+}
+if (failures.length) console.error(`\nfailed captures: ${failures.join(", ")}`);
+process.exit(failures.length || problems.length ? 1 : 0);
