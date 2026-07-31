@@ -56,6 +56,15 @@ run can quietly produce a cookie banner, a loading skeleton, an empty state, or 
 nothing in the script can tell that apart from a good screenshot. Open the file, and open the tile in
 the running site at its real size in both themes.
 
+When you check the tile in the running site, clear Next's optimized-image cache first:
+
+```bash
+rm -rf .next/dev/cache/images
+```
+
+That cache survives both the file being overwritten and a dev server restart, so without this you
+can spend a while looking at the previous crop and wondering why nothing changed.
+
 Adding a project means adding its entry to `APPS` in `lib/apps.ts` and a matching recipe in
 `scripts/capture-mockups.mjs`. If the app gets a dedicated dark-theme capture, add its id to
 `DARK_CAPTURES` in `components/app-mockup.tsx` too, otherwise the dark file is written and never
