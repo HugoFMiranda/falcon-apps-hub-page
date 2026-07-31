@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -H 127.0.0.1",
-    "mockups": "node scripts/capture-mockups.mjs"
+    "mockups": "node scripts/capture-mockups.mjs",
+    "mockups:yomu": "node scripts/capture-yomu.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
