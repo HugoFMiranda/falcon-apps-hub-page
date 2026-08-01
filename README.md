@@ -1,24 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# falcon-hub
 
-## Getting Started
+Personal portfolio site for Hugo Miranda. One page: hero, GitHub activity, a portfolio grid of the
+projects in `lib/apps.ts`, an about section and contact details.
 
-First, run the development server:
+Next.js 16 (App Router) with React 19, Tailwind CSS 4, shadcn components on Base UI, Motion for
+animation and Lucide for icons.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). `npm run build` produces the production build
+and `npm run start` serves it on `127.0.0.1`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/layout.tsx` holds the metadata, the Geist fonts and the inline script that applies the saved
+  theme before first paint. The theme lives in `localStorage` under `falcon-hub-theme` and is toggled
+  from the navbar; there is no theme provider.
+- `app/page.tsx` renders a single component, `components/shadcn-space/pages/landing-page-01`. Each
+  section of the page is a folder under it (`hero`, `portfolio`, `about`, `contact`, `layout`).
+- `lib/apps.ts` is the source of truth for the portfolio. `APPS` describes every project: its name,
+  URL, tags, tile colours, optional public repo, and optional `environments` with demo credentials
+  that `components/demo-modal.tsx` shows.
+- `components/ui/` is generated shadcn code. `app/globals.css` carries the design tokens for both
+  themes.
 
 ## Project mockups
 
@@ -71,17 +80,10 @@ Adding a project means adding its entry to `APPS` in `lib/apps.ts` and a matchin
 served. The capture script checks all of that at the end of a run and exits non-zero if it does not
 line up.
 
-## Learn More
+## Working on this repo
 
-To learn more about Next.js, take a look at the following resources:
+`AGENTS.md` holds the conventions, and `CLAUDE.md` points at it, so both humans and agents read the
+same file. Design notes and plans for past changes live in `docs/superpowers/`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This runs a Next.js version newer than most published documentation and most model training data.
+The bundled docs in `node_modules/next/dist/docs/` are the reference to check before writing code.
