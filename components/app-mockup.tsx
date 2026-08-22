@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import type { AppDef } from "@/lib/apps";
+import AppMockupPlaceholder, { hasPlaceholderArt } from "@/components/app-mockup-placeholder";
 
 /** Apps with a captured dark screenshot. Everything else reuses its light one. */
 const DARK_CAPTURES = new Set(["yomu"]);
@@ -69,13 +70,17 @@ export default function AppMockup({ app, isDark }: { app: AppDef; isDark: boolea
       {/* Screenshot at 1:1. Each capture's own clip does the framing, so an extra
           zoom here would only slice through content that was deliberately included. */}
       <div className="relative h-[calc(100%-1.25rem)] w-full overflow-hidden">
-        <Image
-          src={src}
-          alt={`Screenshot of ${app.name}`}
-          fill
-          sizes="(min-width: 1280px) 320px, (min-width: 1024px) 256px, 100vw"
-          className="object-cover object-top"
-        />
+        {hasPlaceholderArt(app.id) ? (
+          <AppMockupPlaceholder appId={app.id} accent={app.colors.accent} isDark={isDark} />
+        ) : (
+          <Image
+            src={src}
+            alt={`Screenshot of ${app.name}`}
+            fill
+            sizes="(min-width: 1280px) 320px, (min-width: 1024px) 256px, 100vw"
+            className="object-cover object-top"
+          />
+        )}
       </div>
     </div>
   );
