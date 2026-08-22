@@ -156,6 +156,54 @@ export const APPS: AppDef[] = [
     ],
   },
   {
+    id: "gatherroll",
+    name: "GatherRoll",
+    url: "github.com/HugoFMiranda/gatherroll",
+    hosted: false,
+    status: "Mobile app — pre-launch",
+    description:
+      "Private shared camera roll for events. Guests join an album via link or QR code and every photo appears for everyone in near-real time.",
+    tags: ["Expo", "React Native", "TypeScript", "Supabase", "Postgres"],
+    repo: "https://github.com/HugoFMiranda/gatherroll",
+    colors: {
+      bgLight: "linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)",
+      bgDark: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
+      accent: "#4f46e5",
+    },
+  },
+  {
+    id: "pawtine",
+    name: "Pawtine",
+    url: "github.com/HugoFMiranda/pawtine",
+    hosted: false,
+    status: "Mobile app — pre-launch",
+    description:
+      "Local-first daily pet-care tracker for medicine, meals, water, walks, and mood. No backend, no account, no ads.",
+    tags: ["Expo", "React Native", "TypeScript", "SQLite", "Drizzle"],
+    repo: "https://github.com/HugoFMiranda/pawtine",
+    colors: {
+      bgLight: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+      bgDark: "linear-gradient(135deg, #451a03 0%, #78350f 100%)",
+      accent: "#92400e",
+    },
+  },
+  {
+    id: "plura-post",
+    name: "PluraPost",
+    url: "github.com/HugoFMiranda/plura-post",
+    hosted: false,
+    status: "Not yet deployed",
+    description:
+      "Cross-platform content operations for creators and small brands. Write once, adapt per platform, and publish through a delivery pipeline that retries safely and never fails silently.",
+    tags: ["Laravel", "PHP 8.4", "React", "Inertia.js", "TypeScript", "Postgres", "Redis"],
+    repo: "https://github.com/HugoFMiranda/plura-post",
+    colors: {
+      bgLight: "linear-gradient(135deg, #ecfeff 0%, #cffafe 100%)",
+      bgDark: "linear-gradient(135deg, #083344 0%, #164e63 100%)",
+      accent: "#0891b2",
+    },
+  },
+  {
     id: "yomu",
     name: "Yomu",
     url: "github.com/HugoFMiranda/yomu",
