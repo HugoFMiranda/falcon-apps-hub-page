@@ -190,6 +190,15 @@ const RECIPES = [
     quality: 72,
   },
   {
+    // The lobby: logo plus the four game cards, which is the whole product at a glance.
+    // Its CSS entrance is under a second; capture() waits 1.2 s after prepare anyway.
+    id: "playinlobby",
+    url: "https://playinlobby.hugofmiranda.com",
+    viewport: { width: 1280, height: 800 },
+    themes: ["light"],
+    clip: { x: 140, y: 0, width: 1000, height: 470 },
+  },
+  {
     id: "anime-calendar",
     url: "https://anime-calendar.net/today",
     viewport: { width: 1280, height: 800 },

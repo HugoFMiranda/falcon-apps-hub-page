@@ -129,6 +129,21 @@ export const APPS: AppDef[] = [
     },
   },
   {
+    id: "playinlobby",
+    name: "PlayInLobby",
+    url: "playinlobby.hugofmiranda.com",
+    href: "https://playinlobby.hugofmiranda.com",
+    hosted: true,
+    description:
+      "Four classic two-player games: Four in a Row, Reversi, Checkers and Sea Strike. Play a friend on one device, the computer at three difficulty levels, or online through a share link. No ads, no accounts.",
+    tags: ["Astro", "Svelte", "TypeScript", "Bun", "WebSockets", "Web Workers"],
+    colors: {
+      bgLight: "linear-gradient(135deg, #e0f4ff 0%, #bae6fd 100%)",
+      bgDark: "linear-gradient(135deg, #0c1e3d 0%, #1e1b4b 100%)",
+      accent: "#db2777",
+    },
+  },
+  {
     id: "anime-calendar",
     name: "AniCal - anime calendar",
     url: "anime-calendar.net",
