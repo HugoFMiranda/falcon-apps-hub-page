@@ -50,12 +50,6 @@ export const education = [
     period: "2018 to 2020",
     completed: true,
   },
-  {
-    degree: "Vocational Secondary, IT Equipment Management",
-    school: "Escola Profissional de Gaia",
-    period: "2015 to 2018",
-    completed: true,
-  },
 ];
 
 export const certifications = [
