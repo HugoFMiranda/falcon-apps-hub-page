@@ -1,15 +1,16 @@
 import { ArrowUpRight } from "lucide-react";
+import { person } from "@/lib/profile";
 
 const channels = [
   {
     label: "Email",
-    value: "hugo.miranda.imp@gmail.com",
-    href: "mailto:hugo.miranda.imp@gmail.com",
+    value: person.email,
+    href: `mailto:${person.email}`,
   },
   {
     label: "GitHub",
-    value: "github.com/HugoFMiranda",
-    href: "https://github.com/HugoFMiranda",
+    value: person.github.replace("https://", ""),
+    href: person.github,
   },
 ];
 

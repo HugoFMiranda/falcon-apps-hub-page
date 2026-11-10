@@ -1,75 +1,4 @@
-const experience = [
-  { role: "Senior Full Stack Developer", org: "Roboyo", period: "Apr 2025 to Present" },
-  { role: "Full Stack Developer", org: "Roboyo", period: "Jul 2023 to Apr 2025" },
-  { role: "Full Stack Developer (intern)", org: "Roboyo", period: "Apr 2023 to Jun 2023" },
-  { role: "IT Technician Intern / Junior Developer", org: "Capgemini", period: "Jan 2018 to Jun 2018" },
-];
-
-const education = [
-  {
-    degree: "Master's, Computer Software Engineering",
-    school: "Instituto Superior de Engenharia do Porto",
-    period: "2023 to 2024",
-    completed: false,
-  },
-  {
-    degree: "Bachelor's, Systems Engineering",
-    school: "Instituto Superior de Engenharia do Porto",
-    period: "2020 to 2023",
-    completed: true,
-  },
-  {
-    degree: "CTeSP, Computer Networks and Systems",
-    school: "ISLA, Instituto Politécnico de Gestão e Tecnologia",
-    period: "2018 to 2020",
-    completed: true,
-  },
-  {
-    degree: "Vocational Secondary, IT Equipment Management",
-    school: "Escola Profissional de Gaia",
-    period: "2015 to 2018",
-    completed: true,
-  },
-];
-
-const certifications = [
-  {
-    issuer: "Anthropic",
-    items: [
-      { name: "Model Context Protocol: Advanced Topics", date: "Jun 2026" },
-      { name: "Introduction to Model Context Protocol", date: "Jun 2026" },
-      { name: "Certificate of completion: Introduction to subagents", date: "Jun 2026" },
-      { name: "Certificate of completion: Introduction to agent skills", date: "Apr 2026" },
-      { name: "Certificate of completion: Claude Platform 101", date: "Jun 2026" },
-      { name: "Claude Code in Action", date: "Jun 2026" },
-      { name: "Certificate of completion: Claude Code 101", date: "Jun 2026" },
-      { name: "Certificate of completion: Claude 101", date: "Jun 2026" },
-      { name: "Building with the Claude API", date: "Jun 2026" },
-    ],
-  },
-  {
-    issuer: "Cisco Networking Academy",
-    items: [
-      { name: "CCNA Routing and Switching: Connecting Networks", date: "Feb 2020" },
-      { name: "CCNA Routing and Switching: Routing and Switching Essentials", date: "Jul 2019" },
-      { name: "CCNA Routing and Switching: Scaling Networks", date: "Jan 2019" },
-      { name: "CCNA Routing and Switching: Introduction to Networks", date: "Jan 2019" },
-    ],
-  },
-];
-
-const skills = [
-  "Laravel",
-  "React",
-  "Inertia.js",
-  "AureliaJS",
-  "TypeScript",
-  "PHP",
-  "Next.js",
-  "Network Security",
-  "Project Management",
-  "AI-Powered Development",
-];
+import { about, certifications, education, experience, skills } from "@/lib/profile";
 
 export default function About() {
   return (
@@ -89,21 +18,11 @@ export default function About() {
       <div className="border-y border-border">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16">
           <div className="border-x border-border p-6 lg:p-10 flex flex-col gap-6">
-            <p className="text-lg text-muted-foreground">
-              Software developer focused on building reliable, maintainable
-              production web applications. I work mainly with Laravel, React and
-              Inertia across backend development, APIs, frontend implementation,
-              debugging, refactoring, deployment support and system maintenance.
-              I&apos;m also deep into AI-powered development, including agents, MCP, and
-              building with the tooling around them.
-            </p>
-            <p className="text-lg text-muted-foreground">
-              I&apos;m trusted with work that needs ownership: planning features,
-              coordinating tasks, reviewing code, supporting other developers, solving
-              production issues, and delivering clean, practical solutions without
-              unnecessary technical debt. I care about software that works in the real
-              world: secure, understandable, maintainable, and easy for teams to improve.
-            </p>
+            {about.map((paragraph) => (
+              <p key={paragraph.slice(0, 32)} className="text-lg text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
                 <span

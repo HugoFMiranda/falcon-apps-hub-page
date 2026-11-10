@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL, person } from "@/lib/profile";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,24 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "Hugo Miranda | Senior Full Stack Developer";
-const description =
-  "Senior full stack developer in Porto, Portugal, building production web apps with Laravel, React and Next.js. Projects, experience and contact.";
+const title = SITE_TITLE;
+const description = SITE_DESCRIPTION;
 
 // Icons and share images come from the file conventions in this folder
 // (favicon.ico, icon.png, apple-icon.png, opengraph-image.png, twitter-image.png).
+// robots.txt, sitemap.xml and /llms.txt are generated here too.
 export const metadata: Metadata = {
   // hub.hugofmiranda.com serves the same page; canonical points both at the apex.
-  metadataBase: new URL("https://hugofmiranda.com"),
+  metadataBase: new URL(SITE_URL),
   title,
   description,
-  applicationName: "Hugo Miranda",
-  authors: [{ name: "Hugo Miranda", url: "https://hugofmiranda.com" }],
+  applicationName: person.name,
+  authors: [{ name: person.name, url: SITE_URL }],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "/",
-    siteName: "Hugo Miranda",
+    siteName: person.name,
     title,
     description,
     locale: "en_US",
