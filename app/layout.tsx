@@ -12,10 +12,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "Hugo Miranda | Senior Full Stack Developer";
+const description =
+  "Senior full stack developer in Porto, Portugal, building production web apps with Laravel, React and Next.js. Projects, experience and contact.";
+
+// Icons and share images come from the file conventions in this folder
+// (favicon.ico, icon.png, apple-icon.png, opengraph-image.png, twitter-image.png).
 export const metadata: Metadata = {
-  title: "Hugo Miranda, Software Developer",
-  description:
-    "Software developer building reliable, maintainable production web applications with Laravel, React and Next.js. Personal projects, GitHub activity and contact.",
+  // hub.hugofmiranda.com serves the same page; canonical points both at the apex.
+  metadataBase: new URL("https://hugofmiranda.com"),
+  title,
+  description,
+  applicationName: "Hugo Miranda",
+  authors: [{ name: "Hugo Miranda", url: "https://hugofmiranda.com" }],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Hugo Miranda",
+    title,
+    description,
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 export default function RootLayout({
