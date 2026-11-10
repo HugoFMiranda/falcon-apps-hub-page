@@ -14,7 +14,9 @@ export const person = {
   city: "Porto",
   country: "Portugal",
   countryCode: "PT",
-  email: "hugo.miranda.imp@gmail.com",
+  // Cloudflare Email Routing forwards this to the personal inbox; keep the
+  // inbox address itself off the site.
+  email: "hello@hugofmiranda.com",
   github: "https://github.com/HugoFMiranda",
   avatar: "https://avatars.githubusercontent.com/u/74903598?v=4",
 };
